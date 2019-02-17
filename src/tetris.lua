@@ -64,7 +64,53 @@ local brickL = {
 }
 table.insert(BRICKS, brickL)
 
--- print("colors", #COLORS)
+--[[
+    01
+  0 XX
+  1 XX
+]]
+local brickO = {
+  {{0, 0}, {0, 1}, {1, 0}, {1, 1}}
+}
+table.insert(BRICKS, brickO)
+
+--[[
+    012 01
+  0  XX X
+  1 XX  XX
+  2      X
+]]
+local brickS = {
+  {{0, 1}, {1, 1}, {1, 0}, {2, 0}},
+  {{0, 0}, {0, 1}, {1, 1}, {1, 2}}
+}
+table.insert(BRICKS, brickS)
+
+--[[
+    012 01 012 01
+  0 XXX  X  X  X
+  1  X  XX XXX XX
+  2      X     X
+]]
+local brickT = {
+  {{0, 0}, {1, 0}, {2, 0}, {1, 1}},
+  {{1, 0}, {1, 1}, {1, 2}, {0, 1}},
+  {{0, 1}, {1, 1}, {2, 1}, {1, 0}},
+  {{0, 0}, {0, 1}, {0, 2}, {1, 1}}
+}
+table.insert(BRICKS, brickT)
+
+--[[
+    012 01
+  0 XX   X
+  1  XX XX
+  2     X
+]]
+local brickZ = {
+  {{0, 0}, {1, 0}, {1, 1}, {2, 1}},
+  {{1, 0}, {1, 1}, {0, 1}, {0, 2}}
+}
+table.insert(BRICKS, brickZ)
 
 local G = love.graphics
 

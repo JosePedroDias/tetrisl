@@ -1,0 +1,36 @@
+for a = 1, 10, 2 do
+end
+
+for key, value in pairs(hello) do
+
+#tbl => table length (for numeric keys)
+
+
+table.insert(tbl, k, v)
+
+
+table.remove(tbl, k)
+
+
+if expr then
+elseif expr then
+else
+end
+
+function(a, ..rest)
+end
+
+
+== 
+~= 
+and
+or
+not
+
+type()
+'number'
+'function'
+'boolean'
+'nil'
+'string'
+'table'

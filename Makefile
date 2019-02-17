@@ -1,7 +1,6 @@
 .PHONY: run-src symbolics clean dist run-dist
 
 #love = /Applications/love.app/Contents/MacOS/love
-#moonc = moonc
 #open = open
 
 love = "C:\\Program Files\\LOVE\\lovec"

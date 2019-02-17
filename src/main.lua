@@ -3,19 +3,22 @@ local utils = require("src.utils")
 
 local G = love.graphics
 
-local state = {t = 0, brickIdx = 1, brickVar = 1}
+local state = {t = 0, brickIdx = 1, brickVar = 1, board = T.randomBoard()}
 
 function love.load()
   -- print("started")
-  -- require("src.tests")
+  -- require("src.experiments")
+  -- print(T.printBoard(state.board))
 end
 
 function love.draw()
-  T.drawBoard()
+  T.drawBoardBackground()
+
+  T.drawBoard(state.board)
 
   -- T.drawCell(1, 0, 0)
 
-  T.drawBrick({0, 0}, state.brickIdx, state.brickVar)
+  -- T.drawBrick({0, 0}, state.brickIdx, state.brickVar)
 
   G.setColor(1, 1, 1, 1)
   G.print("t:" .. utils.to_fixed(state.t) .. ", idx: " .. state.brickIdx .. ", var: " .. state.brickVar)

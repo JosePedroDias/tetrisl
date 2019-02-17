@@ -41,6 +41,12 @@ M.to_string = function(tbl)
   end
 end
 
+M.table_print_simple = function(tbl)
+  for k, v in pairs(tbl) do
+    print(k .. " -> " .. v)
+  end
+end
+
 M.minus = function(v, minV, maxV)
   if v == minV then
     return maxV

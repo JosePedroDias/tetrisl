@@ -1,4 +1,5 @@
 local consts = require("src.consts")
+local utils = require("src.utils")
 
 local PIECE = {}
 PIECE.I = 1
@@ -112,9 +113,65 @@ local brickZ = {
 }
 table.insert(BRICKS, brickZ)
 
+---- BOARD RELATED
+
+function id2(x, y)
+  return x .. "|" .. y
+end
+
+function _id2(x, y)
+  return y * 100 + x
+end
+
+function iterateBoard(board, fn)
+  for y = 1, consts.h do
+    for x = 1, consts.w do
+      fn(board, x, y)
+    end
+  end
+end
+
+function emptyBoard()
+  local board = {}
+  function emptyCell(board, x, y)
+    board[id2(x, y)] = 0
+  end
+  iterateBoard(board, emptyCell)
+  return board
+end
+
+function randomBoard()
+  local board = {}
+  function fillCell(board, x, y)
+    local r = math.random()
+    board[id2(x, y)] = r < 0.25 and 0 or love.math.random(#BRICKS)
+  end
+  iterateBoard(board, fillCell)
+  return board
+end
+
+function printBoard(board)
+  local s = ""
+  local lastY = -1
+  function printCell(board, x, y)
+    if y ~= lastY then
+      s = s .. "\n"
+    end
+    s = s .. board[id2(x, y)]
+    lastY = y
+  end
+  iterateBoard(board, printCell)
+  return s
+end
+
+---- DRAWING FUNCTIONS
+
 local G = love.graphics
 
 function drawCell(colorIdx, x, y)
+  if (colorIdx == 0) then
+    return
+  end
   local clr = COLORS[colorIdx]
   G.setColor(clr[1], clr[2], clr[3], 1)
   G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
@@ -129,7 +186,15 @@ function drawBrick(pos0, brickIdx, brickVar)
   end
 end
 
-function drawBoard()
+function drawBoard(board)
+  function fn(b, x, y)
+    local v = b[id2(x, y)]
+    drawCell(v, x - 1, y - 1)
+  end
+  iterateBoard(board, fn)
+end
+
+function drawBoardBackground()
   for y = 0, consts.h - 1 do
     for x = 0, consts.w - 1 do
       local alpha = (x + y) % 2 == 0 and 0.2 or 0.1
@@ -141,7 +206,12 @@ end
 
 return {
   BRICKS = BRICKS,
+  iterateBoard = iterateBoard,
+  emptyBoard = emptyBoard,
+  randomBoard = randomBoard,
+  printBoard = printBoard,
   drawCell = drawCell,
   drawBrick = drawBrick,
-  drawBoard = drawBoard
+  drawBoard = drawBoard,
+  drawBoardBackground = drawBoardBackground
 }

@@ -2,9 +2,6 @@
 
 ## reference
 
-- <https://www.lua.org/manual/5.1/>
-
-- <https://moonscript.org/reference/>
-- <http://moonscript.org/compiler/>
-
-- <https://love2d.org/wiki/Main_Page>
+- [lua manual 5.1](https://www.lua.org/manual/5.1/)
+- [love2d api](https://love2d.org/wiki/Main_Page)
+- [tetris](https://en.wikipedia.org/wiki/Tetris)

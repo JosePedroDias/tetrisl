@@ -143,8 +143,10 @@ end
 function randomBoard()
   local board = {}
   function fillCell(board, x, y)
-    local r = math.random()
-    board[id2(x, y)] = r < 0.25 and 0 or love.math.random(#BRICKS)
+    local r = love.math.random()
+    -- local isOn = r > 0.25
+    local isOn = r < ((y - 2) / consts.h)
+    board[id2(x, y)] = (not isOn) and 0 or love.math.random(#BRICKS)
   end
   iterateBoard(board, fillCell)
   return board
@@ -162,6 +164,28 @@ function printBoard(board)
   end
   iterateBoard(board, printCell)
   return s
+end
+
+function doesBrickHitBoard(brickIdx, brickVar, board)
+  local items = BRICKS[brickIdx][brickVar]
+  for k, v in pairs(items) do
+    if board[id2(v[1], v[2])] ~= 0 then
+      return true
+    end
+  end
+  return false
+end
+
+function applyBrickToBoard(brickIdx, brickVar)
+  local items = BRICKS[brickIdx][brickVar]
+  for k, v in pairs(items) do
+    board[id2(v[1], v[2])] = brickIdx
+  end
+end
+
+function computeLines(board)
+  -- TODO
+  return board
 end
 
 ---- DRAWING FUNCTIONS
@@ -210,6 +234,9 @@ return {
   emptyBoard = emptyBoard,
   randomBoard = randomBoard,
   printBoard = printBoard,
+  doesBrickHitBoard = doesBrickHitBoard,
+  applyBrickToBoard = applyBrickToBoard,
+  computeLines = computeLines,
   drawCell = drawCell,
   drawBrick = drawBrick,
   drawBoard = drawBoard,

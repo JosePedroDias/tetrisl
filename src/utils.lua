@@ -41,4 +41,18 @@ M.to_string = function(tbl)
   end
 end
 
+M.minus = function(v, minV, maxV)
+  if v == minV then
+    return maxV
+  end
+  return v - 1
+end
+
+M.plus = function(v, minV, maxV)
+  if v == maxV then
+    return minV
+  end
+  return v + 1
+end
+
 return M

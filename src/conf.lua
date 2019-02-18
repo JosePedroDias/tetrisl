@@ -1,4 +1,4 @@
-local consts = require("src.consts")
+local consts = require "src.consts"
 
 love.conf = function(t)
   t.modules.joystick = false

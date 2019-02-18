@@ -1,7 +1,7 @@
 local M = {}
 
-M.toFixed = function(n)
-  return math.floor(n * 100) / 100
+M.toFixed = function(n, digits)
+  return string.format("%." .. tostring(digits) .. "f", n)
 end
 
 M.tableToString = function(tt, indent, done)
@@ -153,16 +153,24 @@ M.deepEqual = function(t1, t2)
   return true
 end
 
-M.minus = function(v, minV, maxV)
+M.minus = function(v, minV, maxV, dontLoop)
   if v == minV then
-    return maxV
+    if dontLoop then
+      return v
+    else
+      return maxV
+    end
   end
   return v - 1
 end
 
-M.plus = function(v, minV, maxV)
+M.plus = function(v, minV, maxV, dontLoop)
   if v == maxV then
-    return minV
+    if dontLoop then
+      return v
+    else
+      return minV
+    end
   end
   return v + 1
 end

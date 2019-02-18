@@ -1,5 +1,5 @@
-local consts = require("src.consts")
-local utils = require("src.utils")
+local consts = require "src.consts"
+local utils = require "src.utils"
 
 local KIND = {}
 KIND.I = 1
@@ -25,43 +25,43 @@ local COLORS = {
 local BRICKS = {}
 
 --[[
-    0123 0
-  0 XXXX X
-  1      X
-  2      X
-  3      X
+    0 0123
+  0 X XXXX
+  1 X     
+  2 X     
+  3 X     
 ]]
 local brickI = {
-  {{0, 0}, {1, 0}, {2, 0}, {3, 0}},
-  {{0, 0}, {0, 1}, {0, 2}, {0, 3}}
+  {{0, 0}, {0, 1}, {0, 2}, {0, 3}},
+  {{0, 0}, {1, 0}, {2, 0}, {3, 0}}
 }
 table.insert(BRICKS, brickI)
 
 --[[
-    012  01 012 01
-  0 XXX   X X   XX
-  1   X   X XXX X
-  2      XX     X
+    01 012  01 012
+  0 XX XXX   X X  
+  1 X    X   X XXX
+  2 X       XX    
 ]]
 local brickJ = {
+  {{1, 0}, {0, 0}, {0, 1}, {0, 2}},
   {{0, 0}, {1, 0}, {2, 0}, {2, 1}},
   {{0, 2}, {1, 2}, {1, 1}, {1, 0}},
-  {{0, 0}, {0, 1}, {1, 1}, {2, 1}},
-  {{1, 0}, {0, 0}, {0, 1}, {0, 2}}
+  {{0, 0}, {0, 1}, {1, 1}, {2, 1}}
 }
 table.insert(BRICKS, brickJ)
 
 --[[
-    012  01 012 01
-  0 XXX  XX   X X
-  1 X     X XXX X
-  2       X     XX
+    01 012 01 012
+  0 XX   X X  XXX
+  1  X XXX X  X  
+  2  X     XX    
 ]]
 local brickL = {
-  {{2, 0}, {1, 0}, {0, 0}, {0, 1}},
   {{0, 0}, {1, 0}, {1, 1}, {1, 2}},
   {{2, 0}, {2, 1}, {1, 1}, {0, 1}},
-  {{0, 0}, {0, 1}, {0, 2}, {1, 2}}
+  {{0, 0}, {0, 1}, {0, 2}, {1, 2}},
+  {{2, 0}, {1, 0}, {0, 0}, {0, 1}}
 }
 table.insert(BRICKS, brickL)
 
@@ -76,14 +76,14 @@ local brickO = {
 table.insert(BRICKS, brickO)
 
 --[[
-    012 01
-  0  XX X
+    01 012
+  0 X  XX 
   1 XX  XX
-  2      X
+  2  X    
 ]]
 local brickS = {
-  {{0, 1}, {1, 1}, {1, 0}, {2, 0}},
-  {{0, 0}, {0, 1}, {1, 1}, {1, 2}}
+  {{0, 0}, {0, 1}, {1, 1}, {1, 2}},
+  {{0, 1}, {1, 1}, {1, 0}, {2, 0}}
 }
 table.insert(BRICKS, brickS)
 
@@ -102,14 +102,14 @@ local brickT = {
 table.insert(BRICKS, brickT)
 
 --[[
-    012 01
-  0 XX   X
-  1  XX XX
-  2     X
+    01 012
+  0  X XX 
+  1 XX  XX
+  2 X     
 ]]
 local brickZ = {
-  {{0, 0}, {1, 0}, {1, 1}, {2, 1}},
-  {{1, 0}, {1, 1}, {0, 1}, {0, 2}}
+  {{1, 0}, {1, 1}, {0, 1}, {0, 2}},
+  {{0, 0}, {1, 0}, {1, 1}, {2, 1}}
 }
 table.insert(BRICKS, brickZ)
 

@@ -1,7 +1,7 @@
 love = {}
 
-local utils = require("src.utils")
-local T = require("src.tetris")
+local utils = require "src.utils"
+local T = require "src.tetris"
 
 local function test_brickFromString()
   local br = T.brickFromString([[

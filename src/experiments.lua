@@ -1,4 +1,4 @@
-local utils = require("src.utils")
+local utils = require "src.utils"
 
 --[[ local t = {x = "a"}
 local a = true
@@ -10,6 +10,7 @@ end ]]
 -- print(other.to_string(f))
 -- print(other.table_print(t, 2))
 
+--[[ 
 function _id2(x, y)
   return x .. "|" .. y
 end
@@ -28,3 +29,4 @@ for k, v in pairs(mtx) do
 end
 
 error("boom")
+ ]]

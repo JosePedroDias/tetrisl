@@ -1,4 +1,4 @@
-local utils = require("src.utils")
+local utils = require "src.utils"
 
 local function test_split()
   local a = "a b cddd"

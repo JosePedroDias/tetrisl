@@ -32,3 +32,6 @@ run-dist: dist
 test:
 	@$(lua) tests/testy.lua tests/board.lua
 #	@$(lua) tests/testy.lua tests/*.lua
+
+lua-repl:
+	@$(lua) -i

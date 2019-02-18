@@ -1,5 +1,7 @@
 # tetris game implemented in love2d
 
+A chance to better learn lua 5.1 and love2d
+
 ## reference
 
 - [lua manual 5.1](https://www.lua.org/manual/5.1/)

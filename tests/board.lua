@@ -10,7 +10,7 @@ XX
  X]])
   local br2 = {{0, 0}, {q, 0}, {1, 1}, {1, 2}}
   --print(utils.tableToString(br))
-  assert(utils.deepEqual(br, b2), "not equal")
+  assert(utils.deepEqual(br, b2), "bricks not equal")
 end
 
 local function test_boardFromString()
@@ -40,7 +40,7 @@ local function test_boardFromString()
   local s2 = T.boardToString(board)
   --print(s)
   --print(s2)
-  assert(s == s2, "string differ")
+  assert(s == s2, "strings for boards differ")
 end
 
 local function test_id2()

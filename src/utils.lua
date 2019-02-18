@@ -125,24 +125,32 @@ end
 M.deepEqual = function(t1, t2)
   local t = type(t1)
   if t ~= type(t2) then
+    print("different type: " .. t .. " ~= " .. type(t2))
     return false
   end
   if t ~= "table" then
+    if t1 ~= t2 then
+      print("values differ: " .. t1 .. " ~= " .. t2)
+    end
     return t1 == t2
   end
-  local k2 = next(t2)
-  for k1, v1 in pairs(t1) do
-    if k2 == nil then
-      return false
-    end
-    k2 = next(t2, k2)
 
+  for k1, v1 in pairs(t1) do
     local v2 = t2[k1]
     if not M.deepEqual(v1, v2) then
       return false
     end
   end
-  return k2 == nil
+
+  for k2, v2 in pairs(t2) do
+    local v1 = t1[k2]
+    if v2 and not v1 then
+      print("ommitted key in 1st table: " .. k2)
+      return false
+    end
+  end
+
+  return true
 end
 
 M.minus = function(v, minV, maxV)

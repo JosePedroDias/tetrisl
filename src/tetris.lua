@@ -114,17 +114,17 @@ local brickZ = {
 table.insert(BRICKS, brickZ)
 
 function brickFromString(st)
-  local b = {}
+  local br = {}
   local lines = utils.splitLines(st)
   for y, line in pairs(lines) do
     local chars = utils.explodeString(line)
     for x, char in pairs(chars) do
       if char ~= " " then
-        table.insert(b, {x - 1, y - 1})
+        table.insert(br, {x - 1, y - 1})
       end
     end
   end
-  return b
+  return br
 end
 
 ---- BOARD RELATED

@@ -1,14 +1,14 @@
 local consts = require("src.consts")
 local utils = require("src.utils")
 
-local PIECE = {}
-PIECE.I = 1
-PIECE.J = 2
-PIECE.L = 3
-PIECE.O = 4
-PIECE.S = 5
-PIECE.T = 6
-PIECE.Z = 7
+local KIND = {}
+KIND.I = 1
+KIND.J = 2
+KIND.L = 3
+KIND.O = 4
+KIND.S = 5
+KIND.T = 6
+KIND.Z = 7
 
 local GRID_COLOR = {0.25, 0.25, 0.25}
 
@@ -113,14 +113,30 @@ local brickZ = {
 }
 table.insert(BRICKS, brickZ)
 
+function brickFromString(st)
+  local b = {}
+  local lines = utils.splitLines(st)
+  for y, line in pairs(lines) do
+    local chars = utils.explodeString(line)
+    for x, char in pairs(chars) do
+      if char ~= " " then
+        table.insert(b, {x - 1, y - 1})
+      end
+    end
+  end
+  return b
+end
+
 ---- BOARD RELATED
 
 function id2(x, y)
-  return x .. "|" .. y
+  return y * 100 + x
 end
 
-function _id2(x, y)
-  return y * 100 + x
+function id2Rev(id)
+  local x = id % 100
+  local y = (id - x) / 100
+  return {x, y}
 end
 
 function iterateBoard(board, fn)
@@ -129,6 +145,39 @@ function iterateBoard(board, fn)
       fn(board, x, y)
     end
   end
+end
+
+function boardFromString(st)
+  local board = emptyBoard()
+  local lines = utils.splitLines(st)
+  for y, line in pairs(lines) do
+    local chars = utils.explodeString(line)
+    for x, char in pairs(chars) do
+      local n = tonumber(char)
+      if (type(n) == "number") then
+        board[id2(x, y)] = n
+      end
+    end
+  end
+  return board
+end
+
+function boardToString(board)
+  local s = ""
+  local lastY = -1
+  function printCell(board, x, y)
+    if y ~= lastY then
+      s = s .. "\n"
+    end
+    local v = board[id2(x, y)]
+    if v == 0 then
+      v = " "
+    end
+    s = s .. v
+    lastY = y
+  end
+  iterateBoard(board, printCell)
+  return s
 end
 
 function emptyBoard()
@@ -152,20 +201,6 @@ function randomBoard()
   return board
 end
 
-function printBoard(board)
-  local s = ""
-  local lastY = -1
-  function printCell(board, x, y)
-    if y ~= lastY then
-      s = s .. "\n"
-    end
-    s = s .. board[id2(x, y)]
-    lastY = y
-  end
-  iterateBoard(board, printCell)
-  return s
-end
-
 function doesBrickHitBoard(brickIdx, brickVar, board)
   local items = BRICKS[brickIdx][brickVar]
   for k, v in pairs(items) do
@@ -184,7 +219,7 @@ function applyBrickToBoard(brickIdx, brickVar)
 end
 
 function computeLines(board)
-  -- TODO
+  -- TODO:
   return board
 end
 
@@ -221,7 +256,7 @@ end
 function drawBoardBackground()
   for y = 0, consts.h - 1 do
     for x = 0, consts.w - 1 do
-      local alpha = (x + y) % 2 == 0 and 0.2 or 0.1
+      local alpha = (x + y) % 2 == 0 and 0.15 or 0.075
       G.setColor(1, 1, 1, alpha)
       G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
     end
@@ -230,10 +265,16 @@ end
 
 return {
   BRICKS = BRICKS,
+  COLORS = COLORS,
+  KIND = KIND,
+  brickFromString = brickFromString,
+  id2 = id2,
+  id2Rev = id2Rev,
   iterateBoard = iterateBoard,
+  boardFromString = boardFromString,
+  boardToString = boardToString,
   emptyBoard = emptyBoard,
   randomBoard = randomBoard,
-  printBoard = printBoard,
   doesBrickHitBoard = doesBrickHitBoard,
   applyBrickToBoard = applyBrickToBoard,
   computeLines = computeLines,

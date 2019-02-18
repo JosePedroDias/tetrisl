@@ -1,8 +1,9 @@
-.PHONY: run-src symbolics clean dist run-dist
+.PHONY: run-src symbolics clean dist run-dist test
 
 #love = /Applications/love.app/Contents/MacOS/love
 #open = open
 
+lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
 love = "C:\\Program Files\\LOVE\\lovec"
 open = explorer
 
@@ -27,3 +28,7 @@ dist:
 
 run-dist: dist
 	@$(love) dist/$(gamename)
+
+test:
+	@$(lua) tests/testy.lua tests/board.lua
+#	@$(lua) tests/testy.lua tests/*.lua

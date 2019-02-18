@@ -8,7 +8,6 @@ local state = {t = 0, brickIdx = 2, brickVar = 1, board = T.randomBoard(), x = 0
 function love.load()
   -- print("started")
   -- require("src.experiments")
-  -- print(T.printBoard(state.board))
 end
 
 function love.draw()
@@ -19,10 +18,15 @@ function love.draw()
   T.drawBrick({state.x, state.y}, state.brickIdx, state.brickVar)
 
   G.setColor(1, 1, 1, 1)
-  G.print("t:" .. utils.to_fixed(state.t) .. ", idx: " .. state.brickIdx .. ", var: " .. state.brickVar)
+  G.print("t:" .. utils.toFixed(state.t) .. ", idx: " .. state.brickIdx .. ", var: " .. state.brickVar)
 end
 
 function love.update(dt)
+  -- TODO: dumb vertical movement
+  if math.floor(state.t) ~= math.floor(state.t + dt) then
+    state.y = state.y + 1
+  end
+
   state.t = state.t + dt
 end
 
@@ -45,8 +49,8 @@ function love.keypressed(key, scancode, is_repeat)
     state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   elseif key == "escape" then
     love.event.quit()
-  else
-    print(key)
+  -- else
+  --   print(key)
   end
 end
 

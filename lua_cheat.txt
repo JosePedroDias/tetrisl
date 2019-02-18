@@ -1,7 +1,8 @@
 for a = 1, 10, 2 do
 end
 
-for key, value in pairs(hello) do
+for key, value in pairs(hello) do -- iterate over table keys
+for key, value in ipairs(hello) do -- iterate over table keys, numberical order?
 
 #tbl => table length (for numeric keys)
 
@@ -34,3 +35,13 @@ type()
 'nil'
 'string'
 'table'
+
+
+local i, v = next(t)
+while i do
+  new_t[i] = v
+  i, v = next(t, i) 
+end
+
+
+nextvars() -- similar but for global variables

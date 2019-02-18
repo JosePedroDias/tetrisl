@@ -1,10 +1,10 @@
 local M = {}
 
-M.to_fixed = function(n)
+M.toFixed = function(n)
   return math.floor(n * 100) / 100
 end
 
-M.table_print = function(tt, indent, done)
+M.tableToString = function(tt, indent, done)
   done = done or {}
   indent = indent or 0
   if type(tt) == "table" then
@@ -14,13 +14,21 @@ M.table_print = function(tt, indent, done)
       if type(value) == "table" and not done[value] then
         done[value] = true
         table.insert(sb, key .. " = {\n")
-        table.insert(sb, table_print(value, indent + 2, done))
+        table.insert(sb, M.tableToString(value, indent + 2, done))
         table.insert(sb, string.rep(" ", indent)) -- indent it
         table.insert(sb, "}\n")
       elseif "number" == type(key) then
-        table.insert(sb, string.format('"%s"\n', tostring(value)))
+        if (type(value) == "string") then
+          table.insert(sb, string.format('%s = "%s"\n', tostring(key), tostring(value)))
+        else
+          table.insert(sb, string.format("%s = %s\n", tostring(key), tostring(value)))
+        end
       else
-        table.insert(sb, string.format('%s = "%s"\n', tostring(key), tostring(value)))
+        if (type(value) == "string") then
+          table.insert(sb, string.format('"%s" = "%s"\n', tostring(key), tostring(value)))
+        else
+          table.insert(sb, string.format('"%s" = %s\n', tostring(key), tostring(value)))
+        end
       end
     end
     return table.concat(sb)
@@ -29,22 +37,112 @@ M.table_print = function(tt, indent, done)
   end
 end
 
-M.to_string = function(tbl)
+M.toString = function(tbl)
   if "nil" == type(tbl) then
     return tostring(nil)
   elseif "table" == type(tbl) then
-    return table_print(tbl)
+    return M.tableToString(tbl)
   elseif "string" == type(tbl) then
-    return tbl
+    return '"' .. tbl .. '"'
   else
     return tostring(tbl)
   end
 end
 
-M.table_print_simple = function(tbl)
+M.keyValueToString = function(tbl)
+  local s = ""
   for k, v in pairs(tbl) do
-    print(k .. " -> " .. v)
+    s = s + k .. " -> " .. v .. "\n"
   end
+  return s
+end
+
+M.arrayToString = function(tbl)
+  local s = ""
+  local len = M.tableLength(tbl)
+  local i = 1
+  for k, v in pairs(tbl) do
+    if type(v) == "string" then
+      v = '"' .. v .. '"'
+    end
+    if i < len then
+      s = s .. v .. ", "
+    else
+      s = s .. v
+    end
+    i = i + 1
+  end
+  return s
+end
+
+M.split = function(st, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local matches = {}
+  for subSt in string.gmatch(st, "([^" .. sep .. "]+)") do
+    table.insert(matches, subSt)
+  end
+  return matches
+end
+
+M.splitLines = function(st)
+  return M.split(st, "\n")
+end
+
+M.tableLength = function(tbl)
+  local len = 0
+  for k, v in pairs(tbl) do
+    len = len + 1
+  end
+  return len
+end
+
+M.join = function(tbl, sep)
+  local s = ""
+  local len = M.tableLength(tbl)
+  local i = 1
+  for k, v in pairs(tbl) do
+    if i < len then
+      s = s .. v .. sep
+    else
+      s = s .. v
+    end
+    i = i + 1
+  end
+  return s
+end
+
+M.explodeString = function(st)
+  local len = string.len(st)
+  local arr = {}
+  for i = 1, len do
+    table.insert(arr, string.sub(st, i, i))
+  end
+  return arr
+end
+
+M.deepEqual = function(t1, t2)
+  local t = type(t1)
+  if t ~= type(t2) then
+    return false
+  end
+  if t ~= "table" then
+    return t1 == t2
+  end
+  local k2 = next(t2)
+  for k1, v1 in pairs(t1) do
+    if k2 == nil then
+      return false
+    end
+    k2 = next(t2, k2)
+
+    local v2 = t2[k1]
+    if not M.deepEqual(v1, v2) then
+      return false
+    end
+  end
+  return k2 == nil
 end
 
 M.minus = function(v, minV, maxV)

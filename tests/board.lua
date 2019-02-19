@@ -3,7 +3,7 @@ love = {}
 local utils = require "src.utils"
 local T = require "src.tetris"
 
-local function test_brickFromString()
+local function _test_brickFromString()
   local br = T.brickFromString([[
 XX
  X
@@ -13,7 +13,7 @@ XX
   assert(utils.deepEqual(br, b2), "bricks not equal")
 end
 
-local function test_boardFromString()
+local function _test_boardFromString()
   local s =
     [[
 6        5
@@ -70,6 +70,8 @@ local function test_computeLines()
   -- TODO:
 end
 
-local function st_doesBrickHitBoard()
-  -- TODO:
+local function test_doesBrickHitBoard()
+  local b1 = T.emptyBoard()
+  assert(T.doesBrickHitBoard(T.KIND.T, 1, b1, 0, 0) == false)
+  assert(T.doesBrickHitBoard(T.KIND.T, 1, b1, -1, 0) == true)
 end

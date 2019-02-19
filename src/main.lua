@@ -3,9 +3,14 @@ local utils = require "src.utils"
 
 local G = love.graphics
 
-local state = {t = 0, brickIdx = 2, brickVar = 1, board = T.randomBoard(), x = 0, y = 0}
+function getRandomBrickIdx()
+  return love.math.random(#T.BRICKS)
+end
+
+local state = {t = 0, brickIdx = getRandomBrickIdx(), brickVar = 1, board = T.emptyBoard(), x = 4, y = 0}
 
 function love.load()
+  love.keyboard.setKeyRepeat(true)
   -- print("started")
   -- require "src.udpClient2"
 end
@@ -21,38 +26,56 @@ function love.draw()
   G.print("t:" .. utils.toFixed(state.t, 2) .. ", idx: " .. state.brickIdx .. ", var: " .. state.brickVar)
 end
 
-function love.update(dt)
-  -- TODO: dumb vertical movement
-  if math.floor(state.t) ~= math.floor(state.t + dt) then
+function moveDown() -- return true if it has hit
+  local hits = T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x, state.y + 1)
+  if hits then
+    T.applyBrickToBoard(state.brickIdx, state.brickVar, state.board, state.x, state.y)
+    state.x = 4
+    state.y = 0
+    state.brickIdx = getRandomBrickIdx()
+    state.brickVar = 1
+    state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
+    if state.x == -1 then
+      error("game over")
+    end
+  else
     state.y = state.y + 1
+  end
+  return hits
+end
+
+function love.update(dt)
+  if math.floor(state.t) ~= math.floor(state.t + dt) then
+    moveDown()
   end
 
   state.t = state.t + dt
 end
 
 function love.keypressed(key, scancode, is_repeat)
-  if is_repeat then
-    return
-  elseif key == "up" then
-    state.brickIdx = utils.minus(state.brickIdx, 1, #T.BRICKS)
-    state.brickVar = 1
-    state.y = 0
+  --if is_repeat then
+  --  return
+  if key == "up" then
+    while not moveDown() do
+    end
   elseif key == "down" then
-    state.brickIdx = utils.plus(state.brickIdx, 1, #T.BRICKS)
-    state.brickVar = 1
-    state.y = 0
+    moveDown()
   elseif key == "left" then
-    state.x = utils.minus(state.x, 0, 8, true)
+    if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
+      state.x = state.x - 1
+    end
   elseif key == "right" then
-    state.x = utils.plus(state.x, 0, 8, true)
+    if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
+      state.x = state.x + 1
+    end
   elseif key == "z" then
     state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
+    state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   elseif key == "x" then
     state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
+    state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   elseif key == "escape" then
     love.event.quit()
-  -- else
-  --   print(key)
   end
 end
 

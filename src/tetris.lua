@@ -201,20 +201,57 @@ function randomBoard()
   return board
 end
 
-function doesBrickHitBoard(brickIdx, brickVar, board)
+function doesBrickHitBoard(brickIdx, brickVar, board, x, y)
   local items = BRICKS[brickIdx][brickVar]
   for k, v in pairs(items) do
-    if board[id2(v[1], v[2])] ~= 0 then
+    local X = v[1] + x + 1
+    if X < 1 or X > consts.w then
       return true
+    end
+    local Y = v[2] + y + 1
+    if Y < 1 then
+      -- ignore these, brick not completely inside board
+    else
+      if Y > consts.h then
+        return true
+      end
+      if board[id2(X, Y)] ~= 0 then
+        return true
+      end
     end
   end
   return false
 end
 
-function applyBrickToBoard(brickIdx, brickVar)
+function applyBrickToBoard(brickIdx, brickVar, board, x, y)
   local items = BRICKS[brickIdx][brickVar]
   for k, v in pairs(items) do
-    board[id2(v[1], v[2])] = brickIdx
+    local X = v[1] + x + 1
+    local Y = v[2] + y + 1
+    board[id2(X, Y)] = brickIdx
+  end
+end
+
+function electNearestPosition(brickIdx, brickVar, board, x, y)
+  local delta = 0
+  if not doesBrickHitBoard(brickIdx, brickVar, board, x, y) then
+    return x
+  end
+
+  while true do
+    delta = delta + 1
+
+    if not doesBrickHitBoard(brickIdx, brickVar, board, x - delta, y) then
+      return x - delta
+    end
+
+    if not doesBrickHitBoard(brickIdx, brickVar, board, x + delta, y) then
+      return x + delta
+    end
+
+    if delta > 5 then
+      return -1
+    end
   end
 end
 
@@ -277,6 +314,7 @@ return {
   randomBoard = randomBoard,
   doesBrickHitBoard = doesBrickHitBoard,
   applyBrickToBoard = applyBrickToBoard,
+  electNearestPosition = electNearestPosition,
   computeLines = computeLines,
   drawCell = drawCell,
   drawBrick = drawBrick,

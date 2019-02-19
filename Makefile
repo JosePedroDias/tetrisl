@@ -1,5 +1,6 @@
 .PHONY: run-src symbolics clean dist run-dist test lua-repl screenshot capture capture-trim
 
+#lua =
 #love = /Applications/love.app/Contents/MacOS/love
 #open = open
 
@@ -23,9 +24,12 @@ clean:
 	@rm -rf dist src/fonts src/images src/sounds
 
 dist:
-	@rm -rf dist
+	@rm -rf dist build
 	@mkdir dist
-	@cd src && zip -9 -q -r ../dist/$(gamename) . && cd ..
+	@mkdir build
+	@cp -R src/* build
+	@find ./build -type f -exec sed -iE 's/src.//g' {} \;
+	@cd build && zip -9 -q -r ../dist/$(gamename) . && cd ..
 	@cd assets && zip -9 -q -r ../dist/$(gamename) . && cd ..
 
 run-dist: dist

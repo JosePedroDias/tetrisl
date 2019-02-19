@@ -29,8 +29,10 @@ dist:
 	@mkdir build
 	@cp -R src/* build
 	@find ./build -type f -exec sed -iE 's/src.//g' {} \;
+	@rm -rf ./build/*.luaE
 	@cd build && zip -9 -q -r ../dist/$(gamename) . && cd ..
 	@cd assets && zip -9 -q -r ../dist/$(gamename) . && cd ..
+	@rm -rf build
 
 run-dist: dist
 	@$(love) dist/$(gamename)

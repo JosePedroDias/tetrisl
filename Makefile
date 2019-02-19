@@ -1,4 +1,4 @@
-.PHONY: run-src symbolics clean dist run-dist test
+.PHONY: run-src symbolics clean dist run-dist test lua-repl screenshot capture capture-trim
 
 #love = /Applications/love.app/Contents/MacOS/love
 #open = open
@@ -37,3 +37,13 @@ test:
 
 lua-repl:
 	@$(lua) -i
+
+screenshot:
+	@ffmpeg -f gdigrab -framerate 15 -i title="tetris" -vframes 1 screenshot.jpg
+
+capture:
+	@rm -f grab.mp4
+	@ffmpeg -f gdigrab -framerate 15 -i title="tetris" -b:v 1M grab.mp4
+
+capture-trim:
+	@ffmpeg -ss 8 -i grab.mp4 -y -vcodec copy -to 30 -avoid_negative_ts make_zero grab2.mp4

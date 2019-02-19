@@ -10,13 +10,15 @@ Z and X to rotate (CCW, CW)
 ## TODO
 
 - display game over text
+- menu to toggle preferences
+  - alt control scheme (up arrow to rotate, space to drop)
+  - alt piece rotation (gameboy flavour)
 - top ten high scores
 - P to pause
 - R to restart
 - mobile touch areas
 - prettier blocks
 - hold brick
-- fix imports inside love file
 - render with custom font
 - publish
   - love file for desktop

@@ -9,3 +9,15 @@ A chance to better learn lua 5.1 and love2d
 - [love2d api](https://love2d.org/wiki/Main_Page)
 - [tetris](https://en.wikipedia.org/wiki/Tetris)
 - [tests with testy](https://github.com/siffiejoe/lua-testy)
+
+## TODO
+
+- increase speed; restart timer on hit
+- show ghost
+- show next
+- score
+- display game over text
+- top ten
+- mobile touch areas
+- prettier blocks
+- hold brick

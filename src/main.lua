@@ -34,6 +34,7 @@ function moveDown() -- return true if it has hit
     state.y = 0
     state.brickIdx = getRandomBrickIdx()
     state.brickVar = 1
+    T.computeLines(state.board)
     state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
     if state.x == -1 then
       error("game over")

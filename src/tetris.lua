@@ -25,14 +25,14 @@ local COLORS = {
 local BRICKS = {}
 
 --[[
-    0 0123
+    1 0123
   0 X XXXX
   1 X     
   2 X     
   3 X     
 ]]
 local brickI = {
-  {{0, 0}, {0, 1}, {0, 2}, {0, 3}},
+  {{1, 0}, {1, 1}, {1, 2}, {1, 3}},
   {{0, 0}, {1, 0}, {2, 0}, {3, 0}}
 }
 table.insert(BRICKS, brickI)
@@ -88,16 +88,16 @@ local brickS = {
 table.insert(BRICKS, brickS)
 
 --[[
-    012 01 012 01
-  0 XXX  X  X  X
-  1  X  XX XXX XX
-  2      X     X
+    012 01 012 012
+  0      X  X   X
+  1 XXX XX XXX  XX
+  2  X   X      X
 ]]
 local brickT = {
-  {{0, 0}, {1, 0}, {2, 0}, {1, 1}},
+  {{0, 1}, {1, 1}, {2, 1}, {1, 2}},
   {{1, 0}, {1, 1}, {1, 2}, {0, 1}},
   {{0, 1}, {1, 1}, {2, 1}, {1, 0}},
-  {{0, 0}, {0, 1}, {0, 2}, {1, 1}}
+  {{1, 0}, {1, 1}, {1, 2}, {2, 1}}
 }
 table.insert(BRICKS, brickT)
 
@@ -144,6 +144,12 @@ function iterateBoard(board, fn)
     for x = 1, consts.w do
       fn(board, x, y)
     end
+  end
+end
+
+function iterateBoardLine(board, y, fn)
+  for x = 1, consts.w do
+    fn(board, x, y)
   end
 end
 
@@ -255,9 +261,43 @@ function electNearestPosition(brickIdx, brickVar, board, x, y)
   end
 end
 
+function moveLinesDown(board, sinceY)
+  for x = 1, consts.w do
+    for y = sinceY, 2, -1 do
+      board[id2(x, y)] = board[id2(x, y - 1)]
+    end
+    board[id2(x, 1)] = 0
+  end
+end
+
+function isLineFilled(board, y)
+  local counter = 0
+
+  function incIfPositive(board, x, y)
+    local v = board[id2(x, y)]
+    if v > 0 then
+      counter = counter + 1
+    end
+  end
+
+  iterateBoardLine(board, y, incIfPositive)
+  return counter == consts.w
+end
+
 function computeLines(board)
-  -- TODO:
-  return board
+  function emptyCell(board, x, y)
+    board[id2(x, y)] = 0
+  end
+
+  local y = consts.h
+  while y > 0 do
+    if isLineFilled(board, y) then
+      iterateBoardLine(board, y, emptyCell)
+      moveLinesDown(board, y)
+    else
+      y = y - 1
+    end
+  end
 end
 
 ---- DRAWING FUNCTIONS
@@ -293,7 +333,7 @@ end
 function drawBoardBackground()
   for y = 0, consts.h - 1 do
     for x = 0, consts.w - 1 do
-      local alpha = (x + y) % 2 == 0 and 0.15 or 0.075
+      local alpha = (x + y) % 2 == 0 and 0.075 or 0.025
       G.setColor(1, 1, 1, alpha)
       G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
     end

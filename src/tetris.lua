@@ -25,43 +25,46 @@ local COLORS = {
 local BRICKS = {}
 
 --[[
-    1 0123
-  0 X XXXX
-  1 X     
-  2 X     
-  3 X     
+    01234 01234 01234 01234
+  0               X        
+  1   X           X        
+  2   O    XOXX   O   XXOX 
+  3   X           X        
+  4   X                    
 ]]
 local brickI = {
-  {{1, 0}, {1, 1}, {1, 2}, {1, 3}},
-  {{0, 0}, {1, 0}, {2, 0}, {3, 0}}
+  {{2, 1}, {2, 2}, {2, 3}, {2, 4}},
+  {{1, 2}, {2, 2}, {3, 2}, {4, 2}},
+  {{2, 0}, {2, 1}, {2, 2}, {2, 3}},
+  {{0, 2}, {1, 2}, {2, 2}, {3, 2}}
 }
 table.insert(BRICKS, brickI)
 
 --[[
-    01 012  01 012
-  0 XX XXX   X X  
-  1 X    X   X XXX
-  2 X       XX    
+    012 012  012 012
+  0  XX       X  X  
+  1  O  XOX   O  XOX
+  2  X    X  XX     
 ]]
 local brickJ = {
-  {{1, 0}, {0, 0}, {0, 1}, {0, 2}},
-  {{0, 0}, {1, 0}, {2, 0}, {2, 1}},
+  {{2, 0}, {1, 0}, {1, 1}, {1, 2}},
+  {{0, 1}, {1, 1}, {2, 1}, {2, 2}},
   {{0, 2}, {1, 2}, {1, 1}, {1, 0}},
   {{0, 0}, {0, 1}, {1, 1}, {2, 1}}
 }
 table.insert(BRICKS, brickJ)
 
 --[[
-    01 012 01 012
-  0 XX   X X  XXX
-  1  X XXX X  X  
-  2  X     XX    
+    012 012 012 012
+  0 XX    X  X     
+  1  O  XOX  O  XOX
+  2  X       XX X  
 ]]
 local brickL = {
   {{0, 0}, {1, 0}, {1, 1}, {1, 2}},
   {{2, 0}, {2, 1}, {1, 1}, {0, 1}},
-  {{0, 0}, {0, 1}, {0, 2}, {1, 2}},
-  {{2, 0}, {1, 0}, {0, 0}, {0, 1}}
+  {{1, 0}, {1, 1}, {1, 2}, {2, 2}},
+  {{2, 1}, {1, 1}, {0, 1}, {0, 2}}
 }
 table.insert(BRICKS, brickL)
 
@@ -76,21 +79,23 @@ local brickO = {
 table.insert(BRICKS, brickO)
 
 --[[
-    01 012
-  0 X  XX 
-  1 XX  XX
-  2  X    
+    012 012 012 012
+  0  X   XX  X
+  1  XO XO   OX  OX
+  2   X       X XX
 ]]
 local brickS = {
   {{0, 0}, {0, 1}, {1, 1}, {1, 2}},
-  {{0, 1}, {1, 1}, {1, 0}, {2, 0}}
+  {{0, 1}, {1, 1}, {1, 0}, {2, 0}},
+  {{1, 0}, {1, 1}, {2, 1}, {2, 2}},
+  {{0, 2}, {1, 2}, {1, 1}, {2, 1}}
 }
 table.insert(BRICKS, brickS)
 
 --[[
     012 01 012 012
   0      X  X   X
-  1 XXX XX XXX  XX
+  1 XOX XO XOX  OX
   2  X   X      X
 ]]
 local brickT = {
@@ -102,12 +107,14 @@ local brickT = {
 table.insert(BRICKS, brickT)
 
 --[[
-    01 012
-  0  X XX 
-  1 XX  XX
-  2 X     
+    012 012 012 012
+  0   X      X  XX 
+  1  OX XO  XO   OX
+  2  X   XX X      
 ]]
 local brickZ = {
+  {{2, 0}, {2, 1}, {1, 1}, {1, 2}},
+  {{0, 1}, {1, 1}, {1, 2}, {2, 2}},
   {{1, 0}, {1, 1}, {0, 1}, {0, 2}},
   {{0, 0}, {1, 0}, {1, 1}, {2, 1}}
 }
@@ -285,6 +292,8 @@ function isLineFilled(board, y)
 end
 
 function computeLines(board)
+  local numLines = 0
+
   function emptyCell(board, x, y)
     board[id2(x, y)] = 0
   end
@@ -292,33 +301,37 @@ function computeLines(board)
   local y = consts.h
   while y > 0 do
     if isLineFilled(board, y) then
+      numLines = numLines + 1
       iterateBoardLine(board, y, emptyCell)
       moveLinesDown(board, y)
     else
       y = y - 1
     end
   end
+
+  return numLines
 end
 
 ---- DRAWING FUNCTIONS
 
 local G = love.graphics
 
-function drawCell(colorIdx, x, y)
+function drawCell(colorIdx, x, y, isGhost)
   if (colorIdx == 0) then
     return
   end
   local clr = COLORS[colorIdx]
-  G.setColor(clr[1], clr[2], clr[3], 1)
+  local alpha = isGhost and 0.33 or 1
+  G.setColor(clr[1], clr[2], clr[3], alpha)
   G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
 end
 
-function drawBrick(pos0, brickIdx, brickVar)
+function drawBrick(pos0, brickIdx, brickVar, isGhost)
   local items = BRICKS[brickIdx][brickVar]
   for k, v in pairs(items) do
     local x = pos0[1] + v[1]
     local y = pos0[2] + v[2]
-    drawCell(brickIdx, x, y)
+    drawCell(brickIdx, x, y, isGhost)
   end
 end
 

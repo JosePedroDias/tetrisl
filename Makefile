@@ -15,14 +15,16 @@ run-src:
 	@$(love) $(srcd)
 
 symbolics:
+	@cd src && ln -s ../assets/fonts fonts && cd ..
 	@cd src && ln -s ../assets/images images && cd ..
 	@cd src && ln -s ../assets/sounds sounds && cd ..
 
 clean:
-	@rm -rf dist src/images src/sounds
+	@rm -rf dist src/fonts src/images src/sounds
 
 dist:
-	@mkdir -p dist
+	@rm -rf dist
+	@mkdir dist
 	@cd src && zip -9 -q -r ../dist/$(gamename) . && cd ..
 	@cd assets && zip -9 -q -r ../dist/$(gamename) . && cd ..
 

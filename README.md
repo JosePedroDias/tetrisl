@@ -16,6 +16,13 @@ Z and X to rotate (CCW, CW)
 - mobile touch areas
 - prettier blocks
 - hold brick
+- fix imports inside love file
+- render with custom font
+- publish
+  - love file for desktop
+  - android apk
+  - ios ipa
+  - web runner
 
 ## reference
 

@@ -4,20 +4,27 @@ A chance to better learn lua 5.1 and love2d
 
 ## instructions
 
-keys to move (up drops)  
-Z and X to rotate (CCW, CW)
+    keys:
+      regular
+        keys to move
+        up rotates, space drops
+      tetris 99
+        keys to move (up drops)
+        Z and X to rotate (CCW, CW)
+
+    bricks:
+      regular
+      tetris 99
+        all bricks rotate around cell axis except for O
 
 ## TODO
 
 - display game over text
 - menu to toggle preferences
-  - alt control scheme (up arrow to rotate, space to drop)
-  - alt piece rotation (gameboy flavour)
 - top ten high scores
 - P to pause
 - R to restart
 - mobile touch areas
-- prettier blocks
 - hold brick
 - render with custom font
 - publish

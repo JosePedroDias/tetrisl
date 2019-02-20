@@ -1,5 +1,6 @@
 local T = require "src.tetris"
 local utils = require "src.utils"
+local settings = require "src.settings"
 
 local G = love.graphics
 
@@ -17,8 +18,8 @@ local state = {
   score = 0,
   lines = 0,
   t = 0,
-  dtForDown = 2,
-  tNextDown = 2,
+  dtForDown = 1.5,
+  tNextDown = 1.5,
   level = 1
 }
 
@@ -40,7 +41,15 @@ function computeDropY()
 end
 
 function love.load()
+  --settings.save("xx", "y123")
+
+  local sets = settings.load()
+  print("controls", sets[1])
+  print("bricks", sets[2])
+
   love.keyboard.setKeyRepeat(true)
+
+  T.prepare()
 
   -- local f = love.graphics.newFont("./assets/fonts/montserrat-semibold.otf", 24)
   -- love.graphics.setFont(f)
@@ -108,36 +117,80 @@ function love.update(dt)
   state.t = state.t + dt
 end
 
+function onDrop()
+  while not moveDown() do
+  end
+  resetTimer()
+end
+
+function onDownOnce()
+  moveDown()
+  resetTimer()
+end
+
+function onLeft()
+  if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
+    state.x = state.x - 1
+    computeDropY()
+  end
+end
+
+function onRight()
+  if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
+    state.x = state.x + 1
+    computeDropY()
+  end
+end
+
+function onCCW()
+  state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
+  state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
+  computeDropY()
+end
+
+function onCW()
+  state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
+  state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
+  computeDropY()
+end
+
+function onExit()
+  love.event.quit()
+end
+
 function love.keypressed(key, scancode, is_repeat)
   --if is_repeat then
   --  return
-  if key == "up" then
-    while not moveDown() do
+  if false then
+    if key == "up" then
+      onDrop()
+    elseif key == "down" then
+      onDownOnce()
+    elseif key == "left" then
+      onLeft()
+    elseif key == "right" then
+      onRight()
+    elseif key == "z" then
+      onCW()
+    elseif key == "x" then
+      onCCW()
+    elseif key == "escape" then
+      onExit()
     end
-    resetTimer()
-  elseif key == "down" then
-    moveDown()
-    resetTimer()
-  elseif key == "left" then
-    if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
-      state.x = state.x - 1
-      computeDropY()
+  else
+    if key == "up" then
+      onCCW()
+    elseif key == "down" then
+      onDownOnce()
+    elseif key == "left" then
+      onLeft()
+    elseif key == "right" then
+      onRight()
+    elseif key == "space" then
+      onDrop()
+    elseif key == "escape" then
+      onExit()
     end
-  elseif key == "right" then
-    if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
-      state.x = state.x + 1
-      computeDropY()
-    end
-  elseif key == "z" then
-    state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
-    state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
-    computeDropY()
-  elseif key == "x" then
-    state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
-    state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
-    computeDropY()
-  elseif key == "escape" then
-    love.event.quit()
   end
 end
 

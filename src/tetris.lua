@@ -30,7 +30,8 @@ local BRICKS = {}
   1   X           X        
   2   O    XOXX   O   XXOX 
   3   X           X        
-  4   X                    
+  4   X  
+
 ]]
 local brickI = {
   {{2, 1}, {2, 2}, {2, 3}, {2, 4}},
@@ -45,12 +46,13 @@ table.insert(BRICKS, brickI)
   0  XX       X  X  
   1  O  XOX   O  XOX
   2  X    X  XX     
+     4   1    2   3
 ]]
 local brickJ = {
-  {{2, 0}, {1, 0}, {1, 1}, {1, 2}},
   {{0, 1}, {1, 1}, {2, 1}, {2, 2}},
   {{0, 2}, {1, 2}, {1, 1}, {1, 0}},
-  {{0, 0}, {0, 1}, {1, 1}, {2, 1}}
+  {{0, 0}, {0, 1}, {1, 1}, {2, 1}},
+  {{2, 0}, {1, 0}, {1, 1}, {1, 2}}
 }
 table.insert(BRICKS, brickJ)
 
@@ -59,12 +61,13 @@ table.insert(BRICKS, brickJ)
   0 XX    X  X     
   1  O  XOX  O  XOX
   2  X       XX X  
+     2   3    4  1
 ]]
 local brickL = {
+  {{2, 1}, {1, 1}, {0, 1}, {0, 2}},
   {{0, 0}, {1, 0}, {1, 1}, {1, 2}},
   {{2, 0}, {2, 1}, {1, 1}, {0, 1}},
-  {{1, 0}, {1, 1}, {1, 2}, {2, 2}},
-  {{2, 1}, {1, 1}, {0, 1}, {0, 2}}
+  {{1, 0}, {1, 1}, {1, 2}, {2, 2}}
 }
 table.insert(BRICKS, brickL)
 
@@ -83,12 +86,13 @@ table.insert(BRICKS, brickO)
   0  X   XX  X
   1  XO XO   OX  OX
   2   X       X XX
+              2  1
 ]]
 local brickS = {
-  {{0, 0}, {0, 1}, {1, 1}, {1, 2}},
-  {{0, 1}, {1, 1}, {1, 0}, {2, 0}},
-  {{1, 0}, {1, 1}, {2, 1}, {2, 2}},
-  {{0, 2}, {1, 2}, {1, 1}, {2, 1}}
+  {{0, 2}, {1, 2}, {1, 1}, {2, 1}},
+  --{{1, 0}, {1, 1}, {2, 1}, {2, 2}},
+  --{{0, 1}, {1, 1}, {1, 0}, {2, 0}},
+  {{0, 0}, {0, 1}, {1, 1}, {1, 2}}
 }
 table.insert(BRICKS, brickS)
 
@@ -111,13 +115,15 @@ table.insert(BRICKS, brickT)
   0   X      X  XX 
   1  OX XO  XO   OX
   2  X   XX X      
+      2   1
 ]]
 local brickZ = {
-  {{2, 0}, {2, 1}, {1, 1}, {1, 2}},
   {{0, 1}, {1, 1}, {1, 2}, {2, 2}},
-  {{1, 0}, {1, 1}, {0, 1}, {0, 2}},
-  {{0, 0}, {1, 0}, {1, 1}, {2, 1}}
+  {{2, 0}, {2, 1}, {1, 1}, {1, 2}}
+  --{{1, 0}, {1, 1}, {0, 1}, {0, 2}},
+  --{{0, 0}, {1, 0}, {1, 1}, {2, 1}}
 }
+
 table.insert(BRICKS, brickZ)
 
 function brickFromString(st)
@@ -316,14 +322,47 @@ end
 
 local G = love.graphics
 
+local CANVAS
+
+function prepare()
+  CANVAS = G.newCanvas(consts.cell, consts.cell)
+  G.setCanvas(CANVAS)
+
+  local c = consts.cell
+  local gap = c / 6
+  local a = gap
+  local b = c - gap
+
+  G.setColor(0.5, 0.5, 0.5, 1)
+  G.rectangle("fill", 0, 0, consts.cell, consts.cell)
+
+  --[[
+    0 a   b c
+    a
+
+    b
+    c
+  ]]
+  G.setColor(1, 1, 1, 1)
+  G.polygon("fill", 0, 0, c, 0, b, a, a, a, a, b, 0, c, 0, 0)
+
+  G.setColor(0, 0, 0, 1)
+  G.polygon("fill", c, c, 0, c, a, b, b, b, b, a, c, 0, c, c)
+
+  G.setCanvas()
+end
+
 function drawCell(colorIdx, x, y, isGhost)
   if (colorIdx == 0) then
     return
   end
   local clr = COLORS[colorIdx]
-  local alpha = isGhost and 0.33 or 1
+  local alpha = isGhost and 0.25 or 1
   G.setColor(clr[1], clr[2], clr[3], alpha)
-  G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
+  local x1 = consts.x0 + x * consts.cell
+  local y1 = consts.y0 + y * consts.cell
+  --G.rectangle("fill", x1, y1, consts.cell, consts.cell)
+  G.draw(CANVAS, x1, y1)
 end
 
 function drawBrick(pos0, brickIdx, brickVar, isGhost)
@@ -346,7 +385,7 @@ end
 function drawBoardBackground()
   for y = 0, consts.h - 1 do
     for x = 0, consts.w - 1 do
-      local alpha = (x + y) % 2 == 0 and 0.075 or 0.025
+      local alpha = (x + y) % 2 == 0 and 0.075 or 0.05
       G.setColor(1, 1, 1, alpha)
       G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
     end
@@ -369,6 +408,7 @@ return {
   applyBrickToBoard = applyBrickToBoard,
   electNearestPosition = electNearestPosition,
   computeLines = computeLines,
+  prepare = prepare,
   drawCell = drawCell,
   drawBrick = drawBrick,
   drawBoard = drawBoard,

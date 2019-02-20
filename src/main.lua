@@ -1,3 +1,4 @@
+local consts = require "src.consts"
 local T = require "src.tetris"
 local utils = require "src.utils"
 local settings = require "src.settings"
@@ -117,6 +118,8 @@ function love.update(dt)
   state.t = state.t + dt
 end
 
+---- ACTIONS
+
 function onDrop()
   while not moveDown() do
   end
@@ -158,6 +161,8 @@ function onExit()
   love.event.quit()
 end
 
+-- ACTIONS VIA KEYS
+
 function love.keypressed(key, scancode, is_repeat)
   --if is_repeat then
   --  return
@@ -194,5 +199,25 @@ function love.keypressed(key, scancode, is_repeat)
   end
 end
 
-function love.keyreleased(key, scancode)
+-- ACTIONS VIA TOUCH
+
+--function love.touchpressed(id, x, y, dx, dy, pressure)
+function love.mousepressed(x, y, button, isTouch)
+  --print(x, y, button, isTouch)
+  local xR = x / consts.W
+  local yR = y / consts.H
+
+  if yR < 0.25 then
+    onDrop()
+  elseif yR > 0.75 then
+    onDownOnce()
+  else
+    if xR < 0.333 then
+      onLeft()
+    elseif xR > 0.666 then
+      onRight()
+    else
+      onCCW()
+    end
+  end
 end

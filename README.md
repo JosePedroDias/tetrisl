@@ -24,7 +24,6 @@ A chance to better learn lua 5.1 and love2d
 - top ten high scores
 - P to pause
 - R to restart
-- mobile touch areas
 - hold brick
 - render with custom font
 - publish
@@ -38,13 +37,13 @@ A chance to better learn lua 5.1 and love2d
 - [lua manual 5.1](https://www.lua.org/manual/5.1/)
 - [lua iterators](https://www.lua.org/manual/2.4/node31.html)
 - [lua demo](https://www.lua.org/cgi-bin/demo)
-
----
-
-- [love2d api](https://love2d.org/wiki/Main_Page)
+- [tests with testy](https://github.com/siffiejoe/lua-testy)
+- [love2d wiki](https://love2d.org/wiki/Main_Page)
+- [love2d api](http://love2d-community.github.io/love-api/)
 - [love examples](https://github.com/love2d-community/LOVE-Example-Browser/tree/master/examples)
 
 ---
 
 - [tetris](https://en.wikipedia.org/wiki/Tetris)
-- [tests with testy](https://github.com/siffiejoe/lua-testy)
+- [reference specs](https://www.colinfahey.com/tetris/)
+- [bricks](https://www.colinfahey.com/tetris/tetris_diagram_pieces_orientations_new.jpg)

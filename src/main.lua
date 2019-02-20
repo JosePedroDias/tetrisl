@@ -53,7 +53,7 @@ function love.load()
 
   local sW, sH = screen.getHighestResolution()
   -- print("screenDims: " .. sW .. " x " .. sH)
-  screen.setSize(sW, sH, consts.W, consts.H, true)
+  screen.setSize(sW, sH, consts.W, consts.H, false)
 
   T.prepare()
 

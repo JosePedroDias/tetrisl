@@ -1,7 +1,7 @@
 local consts = require "src.consts"
 local T = require "src.tetris"
 local utils = require "src.utils"
-local settings = require "src.settings"
+-- local settings = require "src.settings"
 
 local G = love.graphics
 
@@ -44,9 +44,9 @@ end
 function love.load()
   --settings.save("xx", "y123")
 
-  local sets = settings.load()
-  print("controls", sets[1])
-  print("bricks", sets[2])
+  -- local sets = settings.load()
+  -- print("controls", sets[1])
+  -- print("bricks", sets[2])
 
   love.keyboard.setKeyRepeat(true)
 

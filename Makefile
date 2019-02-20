@@ -1,12 +1,12 @@
 .PHONY: run-src symbolics clean dist run-dist test lua-repl screenshot capture capture-trim
 
-#lua =
-#love = /Applications/love.app/Contents/MacOS/love
-#open = open
+lua =
+love = /Applications/love.app/Contents/MacOS/love
+open = open
 
-lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
-love = "C:\\Program Files\\LOVE\\lovec"
-open = explorer
+#lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
+#love = "C:\\Program Files\\LOVE\\lovec"
+#open = explorer
 
 rootd = `pwd`
 srcd = "$(rootd)/src"

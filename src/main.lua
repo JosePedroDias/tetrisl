@@ -1,6 +1,7 @@
 local consts = require "src.consts"
 local T = require "src.tetris"
 local utils = require "src.utils"
+local screen = require "src.screen"
 -- local settings = require "src.settings"
 
 local G = love.graphics
@@ -50,6 +51,10 @@ function love.load()
 
   love.keyboard.setKeyRepeat(true)
 
+  local sW, sH = screen.getHighestResolution()
+  -- print("screenDims: " .. sW .. " x " .. sH)
+  screen.setSize(sW, sH, consts.W, consts.H, true)
+
   T.prepare()
 
   -- local f = love.graphics.newFont("./assets/fonts/montserrat-semibold.otf", 24)
@@ -59,6 +64,8 @@ function love.load()
 end
 
 function love.draw()
+  screen.startDraw()
+
   T.drawBoardBackground()
 
   T.drawBoard(state.board)
@@ -73,6 +80,8 @@ function love.draw()
 
   G.setColor(1, 1, 1, 1)
   G.print("level:" .. state.level .. "  score:" .. state.score .. "  lines:" .. state.lines)
+
+  screen.endDraw()
 end
 
 function moveDown() -- return true if it has hit
@@ -202,10 +211,12 @@ end
 -- ACTIONS VIA TOUCH
 
 --function love.touchpressed(id, x, y, dx, dy, pressure)
-function love.mousepressed(x, y, button, isTouch)
+function love.mousepressed(_x, _y, button, isTouch)
+  local x, y = screen.coords(_x, _y)
+
   --print(x, y, button, isTouch)
   local xR = x / consts.W
-  local yR = y / consts.H
+  local yR = x / consts.H
 
   if yR < 0.25 then
     onDrop()

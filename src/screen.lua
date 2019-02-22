@@ -8,22 +8,19 @@ local M = {}
 local scale, x, y, canvas
 
 M.getCurrentResolution = function()
-  --return 640, 480
-
   local os = love._os
   local sW, sH, scl
 
-  if os == "Windows" then
-    sW = 2736
-    sH = 1824
-    scl = 2
-  elseif os == "Android" then
-    sW, sH = love.window.getMode()
-    scl = love.window.getDPIScale() or 1
-  else
-    sW, sH = love.window.getMode()
-    scl = love.window.getDPIScale() or 1
-  end
+  -- if os == "Android" then
+  --   sW, sH = love.window.getMode()
+  --   scl = love.window.getDPIScale() or 1
+  -- else
+  sW, sH = love.window.getMode()
+  scl = love.window.getDPIScale() or 1
+  -- end
+
+  -- print(os, sW, sH, scl)
+
   return sW / scl, sH / scl
 end
 
@@ -75,7 +72,7 @@ M.setSize = function(W, H, w, h, fullscreen)
     y = (H - h * scale) / 2
   end
 
-  love.window.setMode(W, H, {fullscreen = fullscreen, highdpi = false})
+  love.window.setMode(W, H, {fullscreen = fullscreen, highdpi = true})
 
   canvas = G.newCanvas(w, h)
   --G.setBlendMode("alpha", "alphamultiply") -- premultiplied alphamultiply

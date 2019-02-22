@@ -1,13 +1,13 @@
 .PHONY: run-src symbolics clean dist run-dist test lua-repl screenshot capture capture-trim
 
 #if [ "$(uname)" == "MINGW64_NT-10.0" ]; then
-lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
-love = "C:\\Program Files\\LOVE\\lovec"
-open = explorer
+# lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
+# love = "C:\\Program Files\\LOVE\\lovec"
+# open = explorer
 #elif [ "$(uname)" == "Darwin" ]; then
-#	lua =
-#	love = /Applications/love.app/Contents/MacOS/love
-#	open = open
+lua =
+love = /Applications/love.app/Contents/MacOS/love
+open = open
 #fi
 
 rootd = `pwd`

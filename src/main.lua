@@ -10,20 +10,7 @@ function getRandomBrickIdx()
   return love.math.random(#T.BRICKS)
 end
 
-local state = {
-  nextBrickIdx = getRandomBrickIdx(),
-  brickIdx = getRandomBrickIdx(),
-  brickVar = 1,
-  board = T.emptyBoard(),
-  x = 4,
-  y = 0,
-  score = 0,
-  lines = 0,
-  t = 0,
-  dtForDown = 1.5,
-  tNextDown = 1.5,
-  level = 1
-}
+local state = {}
 
 function resetTimer()
   state.tNextDown = state.t + state.dtForDown
@@ -57,6 +44,8 @@ function love.load()
 
   T.prepare()
 
+  onRestart()
+
   -- local f = love.graphics.newFont("./assets/fonts/montserrat-semibold.otf", 24)
   -- love.graphics.setFont(f)
 
@@ -81,6 +70,10 @@ function love.draw()
   G.setColor(1, 1, 1, 1)
   G.print("level:" .. state.level .. "  score:" .. state.score .. "  lines:" .. state.lines)
 
+  if state.paused then
+    G.print("P A U S E D", consts.W / 2 - 34, consts.H / 2 - 8)
+  end
+
   screen.endDraw()
 end
 
@@ -103,7 +96,7 @@ function moveDown() -- return true if it has hit
     state.nextBrickIdx = getRandomBrickIdx()
     state.brickVar = 1
     state.y = 0
-    state.x = 4
+    state.x = 3
 
     state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
     if state.x == -1 then
@@ -119,6 +112,10 @@ function moveDown() -- return true if it has hit
 end
 
 function love.update(dt)
+  if state.paused then
+    return
+  end
+
   if state.t > state.tNextDown then
     moveDown()
     resetTimer()
@@ -128,6 +125,29 @@ function love.update(dt)
 end
 
 ---- ACTIONS
+
+function onRestart()
+  state.nextBrickIdx = getRandomBrickIdx()
+  state.brickIdx = getRandomBrickIdx()
+  state.brickVar = 1
+  state.board = T.emptyBoard()
+  state.x = 3
+  state.y = 0
+  state.score = 0
+  state.lines = 0
+  state.t = 0
+  state.dtForDown = 1.5
+  state.tNextDown = 1.5
+  state.level = 1
+end
+
+function onPause()
+  if state.paused then
+    state.paused = nil
+  else
+    state.paused = true
+  end
+end
 
 function onDrop()
   while not moveDown() do
@@ -173,8 +193,6 @@ end
 -- ACTIONS VIA KEYS
 
 function love.keypressed(key, scancode, is_repeat)
-  --if is_repeat then
-  --  return
   if false then
     if key == "up" then
       onDrop()
@@ -188,8 +206,6 @@ function love.keypressed(key, scancode, is_repeat)
       onCW()
     elseif key == "x" then
       onCCW()
-    elseif key == "escape" then
-      onExit()
     end
   else
     if key == "up" then
@@ -202,19 +218,23 @@ function love.keypressed(key, scancode, is_repeat)
       onRight()
     elseif key == "space" then
       onDrop()
-    elseif key == "escape" then
-      onExit()
     end
+  end
+
+  if key == "p" then
+    onPause()
+  elseif key == "r" then
+    onRestart()
+  elseif key == "escape" then
+    onExit()
   end
 end
 
 -- ACTIONS VIA TOUCH
 
---function love.touchpressed(id, x, y, dx, dy, pressure)
-function love.mousepressed(_x, _y, button, isTouch)
+function love.mousepressed(_x, _y)
   local x, y = screen.coords(_x, _y)
 
-  --print(x, y, button, isTouch)
   local xR = x / consts.W
   local yR = x / consts.H
 

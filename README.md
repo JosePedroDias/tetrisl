@@ -12,18 +12,15 @@ A chance to better learn lua 5.1 and love2d
         keys to move (up drops)
         Z and X to rotate (CCW, CW)
 
-    bricks:
-      regular
-      tetris 99
-        all bricks rotate around cell axis except for O
+      P pauses
+      R restarts
+      ESC to exit
 
 ## TODO
 
 - display game over text
 - menu to toggle preferences
 - top ten high scores
-- P to pause
-- R to restart
 - hold brick
 - render with custom font
 - publish

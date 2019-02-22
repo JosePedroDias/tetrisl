@@ -1,14 +1,16 @@
-.PHONY: run-src symbolics clean dist run-dist test lua-repl screenshot capture capture-trim
+.PHONY: run-src symbolics clean dist run-dist test lua-repl screenshot capture capture-trim export-lua
 
-#if [ "$(uname)" == "MINGW64_NT-10.0" ]; then
-# lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
-# love = "C:\\Program Files\\LOVE\\lovec"
-# open = explorer
-#elif [ "$(uname)" == "Darwin" ]; then
-lua =
-love = /Applications/love.app/Contents/MacOS/love
-open = open
-#fi
+os := $(shell uname)
+
+ifeq ($(os),Darwin)
+	lua = lua5.1
+	love = /Applications/love.app/Contents/MacOS/love
+	open = open
+else
+	lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
+	love = "C:\\Program Files\\LOVE\\lovec"
+	open = explorer
+endif
 
 rootd = `pwd`
 srcd = "$(rootd)/src"
@@ -39,12 +41,19 @@ dist:
 run-dist: dist
 	@$(love) dist/$(gamename)
 
+export-lua:
+	@luarocks --lua-dir=/usr/local/opt/lua@5.1 path --bin
+	# not yet working for windows
+
+lua-repl:
+	@$(lua) -i
+
 test:
 	@$(lua) tests/testy.lua tests/board.lua
 #	@$(lua) tests/testy.lua tests/*.lua
 
-lua-repl:
-	@$(lua) -i
+run-server:
+	cd network && $(lua) server.lua
 
 screenshot:
 	@ffmpeg -f gdigrab -framerate 15 -i title="tetris" -vframes 1 screenshot.jpg

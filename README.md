@@ -15,11 +15,18 @@ A chance to better learn lua 5.1 and love2d
     > luarocks --lua-dir=/usr/local/opt/lua@5.1 show luasocket
 
     # luarocks --lua-dir=/usr/local/opt/lua@5.1 path --bin
-    > eval $(luarocks -lua-dir=/usr/local/opt/lua@5.1 path --bin)
+    > eval $(luarocks --lua-dir=/usr/local/opt/lua@5.1 path --bin)
 
 eval that to make `lua5.1` know about the libraries
 
 ### windows
+
+TODO NEEDS TESTING
+in an admin powershell do:
+
+    > choco install lua5.1
+    > choco install luarocks
+    > luarocks --lua-dir=/usr/local/opt/lua@5.1 install luasocket
 
 ## instructions
 

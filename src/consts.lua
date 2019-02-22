@@ -1,11 +1,11 @@
 local M = {}
 
-M.W = 800
+M.W = 600
 M.H = 600
 
 M.w = 10
 M.h = 20
-M.cell = 20
+M.cell = 22
 
 local _w = M.w * M.cell
 local _h = M.h * M.cell

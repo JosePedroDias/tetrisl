@@ -1,0 +1,35 @@
+love.displayrotated( index, orientation )
+displayIndex
+unknown    Orientation cannot be determined.
+landscape    Landscape orientation.
+landscapeflipped    Landscape orientation (flipped).
+portrait    Portrait orientation.
+portraitflipped Portrait orientation (flipped)
+
+
+love._os == "Android"
+
+
+
+
+love.window.getDPIScale()
+
+
+love.window.getMode()
+.width
+.height
+
+flags.fullscreen	boolean	Fullscreen (true), or windowed (false).
+flags.fullscreentype	FullscreenType	The type of fullscreen mode used.
+flags.vsync	boolean	True if the graphics framerate is synchronized with the monitor's refresh rate, false otherwise.
+flags.msaa	number	The number of antialiasing samples used (0 if MSAA is disabled).
+flags.resizable	boolean	True if the window is resizable in windowed mode, false otherwise.
+flags.borderless	boolean	True if the window is borderless in windowed mode, false otherwise.
+flags.centered	boolean	True if the window is centered in windowed mode, false otherwise.
+flags.display	number	The index of the display the window is currently in, if multiple monitors are available.
+flags.minwidth	number	The minimum width of the window, if it's resizable.
+flags.minheight	number	The minimum height of the window, if it's resizable.
+flags.highdpi	boolean	True if high-dpi mode should be used on Retina displays in OS X and iOS. Does nothing on non-Retina displays. Added in 0.9.1.
+flags.refreshrate	number	The refresh rate of the screen's current display mode, in Hz. May be 0 if the value can't be determined.
+flags.x	number	The x-coordinate of the window's position in its current display.
+flags.y

@@ -7,27 +7,58 @@ local M = {}
 
 local scale, x, y, canvas
 
+M.getCurrentResolution = function()
+  --return 640, 480
+
+  local os = love._os
+  local sW, sH, scl
+
+  if os == "Windows" then
+    sW = 2736
+    sH = 1824
+    scl = 2
+  elseif os == "Android" then
+    sW, sH = love.window.getMode()
+    scl = love.window.getDPIScale() or 1
+  else
+    sW, sH = love.window.getMode()
+    scl = love.window.getDPIScale() or 1
+  end
+  return sW / scl, sH / scl
+end
+
+M.getLowestResolution = function()
+  local modes = love.window.getFullscreenModes()
+  local wi = 100000
+  local hi = 100000
+  local area = 100000 * 100000
+  local modes = love.window.getFullscreenModes()
+  for _, m in pairs(modes) do
+    local areaT = m.width * m.height
+    if areaT < area then
+      wi = m.width
+      hi = m.height
+      area = areaT
+    end
+  end
+  return wi, hi
+end
+
 M.getHighestResolution = function()
-  -- local modes = love.window.getFullscreenModes()
-  -- for _, m in pairs(modes) do
-  --   print(m.width, m.height)
-  -- end
-
-  return 640, 480
-
-  -- local wi = 0
-  -- local hi = 0
-  -- local area = 0
-  -- local modes = love.window.getFullscreenModes()
-  -- for _, m in pairs(modes) do
-  --   local areaT = m.width * m.height
-  --   if areaT > area then
-  --     wi = m.width
-  --     hi = m.height
-  --     area = areaT
-  --   end
-  -- end
-  -- return wi, hi
+  local modes = love.window.getFullscreenModes()
+  local wi = 0
+  local hi = 0
+  local area = 0
+  local modes = love.window.getFullscreenModes()
+  for _, m in pairs(modes) do
+    local areaT = m.width * m.height
+    if areaT > area then
+      wi = m.width
+      hi = m.height
+      area = areaT
+    end
+  end
+  return wi, hi
 end
 
 M.setSize = function(W, H, w, h, fullscreen)
@@ -44,7 +75,7 @@ M.setSize = function(W, H, w, h, fullscreen)
     y = (H - h * scale) / 2
   end
 
-  love.window.setMode(W, H, {fullscreen = fullscreen})
+  love.window.setMode(W, H, {fullscreen = fullscreen, highdpi = false})
 
   canvas = G.newCanvas(w, h)
   --G.setBlendMode("alpha", "alphamultiply") -- premultiplied alphamultiply

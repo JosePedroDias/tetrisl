@@ -38,9 +38,10 @@ function love.load()
 
   love.keyboard.setKeyRepeat(true)
 
-  local sW, sH = screen.getHighestResolution()
+  local sW, sH = screen.getCurrentResolution()
   -- print("screenDims: " .. sW .. " x " .. sH)
-  screen.setSize(sW, sH, consts.W, consts.H, false)
+
+  screen.setSize(sW, sH, consts.W, consts.H, true)
 
   T.prepare()
 

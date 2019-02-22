@@ -2,6 +2,25 @@
 
 A chance to better learn lua 5.1 and love2d
 
+## dev deps
+
+### mac
+
+    > brew install lua@5.1
+    > lua5.1
+
+    > brew install luarocks
+    > luarocks --lua-dir=/usr/local/opt/lua@5.1 install luasocket
+
+    > luarocks --lua-dir=/usr/local/opt/lua@5.1 show luasocket
+
+    # luarocks --lua-dir=/usr/local/opt/lua@5.1 path --bin
+    > eval $(luarocks -lua-dir=/usr/local/opt/lua@5.1 path --bin)
+
+eval that to make `lua5.1` know about the libraries
+
+### windows
+
 ## instructions
 
     keys:

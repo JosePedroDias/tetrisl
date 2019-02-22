@@ -53,6 +53,20 @@ function love.load()
 end
 
 function love.draw()
+  local r = (state.tNextDown - state.t) / state.dtForDown
+
+  if r > 0.5 then
+    r = (r - 0.5) * 2
+  else
+    r = 0
+  end
+
+  -- if r > 0.8 then
+  --   r = (r - 0.8) * 5
+  -- else
+  --   r = 0
+  -- end
+
   screen.startDraw()
 
   T.drawBoardBackground()
@@ -63,7 +77,7 @@ function love.draw()
     T.drawBrick({state.x, state.dropY}, state.brickIdx, state.brickVar, true)
   end
 
-  T.drawBrick({state.x, state.y}, state.brickIdx, state.brickVar)
+  T.drawBrick({state.x, state.y + (1 - r - 1)}, state.brickIdx, state.brickVar)
 
   T.drawBrick({13, 0}, state.nextBrickIdx, 1)
 

@@ -51,12 +51,17 @@ in a visual c++ 2017 x86 native build tools command prompt with admin do:
 - menu to toggle preferences
 - top ten high scores
 - hold brick
-- render with custom font
+- tweak speeds, levels, scores
 - publish
   - love file for desktop
   - android apk
   - ios ipa
   - web runner
+
+## dependencies
+
+- [luasocket](https://love2d.org/wiki/Tutorial:Networking_with_UDP)
+- [love2d-bitmap-font-renderer](https://github.com/JosePedroDias/love2d-bitmap-font-renderer)
 
 ## reference
 

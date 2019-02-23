@@ -2,7 +2,11 @@ local consts = require "src.consts"
 local T = require "src.tetris"
 local utils = require "src.utils"
 local screen = require "src.screen"
--- local settings = require "src.settings"
+local settings = require "src.settings"
+
+local sControls, sBricks, sSoundEffects
+
+local tickSfx, doneSfx
 
 local G = love.graphics
 
@@ -30,11 +34,10 @@ function computeDropY()
 end
 
 function love.load()
-  --settings.save("xx", "y123")
+  -- settings.save("99", "99", "on")
 
-  -- local sets = settings.load()
-  -- print("controls", sets[1])
-  -- print("bricks", sets[2])
+  sControls, sBricks, sSoundEffects = settings.load()
+  -- print("SETTINGS | controls:" .. sControls .. ", bricks:" .. sBricks .. ", sfx:" .. sSoundEffects)
 
   love.keyboard.setKeyRepeat(true)
 
@@ -45,10 +48,17 @@ function love.load()
 
   T.prepare()
 
-  onRestart()
+  local f1 =
+    G.newImageFont(
+    "fonts/1.png",
+    ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
+  )
+  G.setFont(f1)
 
-  -- local f = love.graphics.newFont("./assets/fonts/montserrat-semibold.otf", 24)
-  -- love.graphics.setFont(f)
+  tickSfx = love.audio.newSource("sounds/tick.ogg", "static")
+  doneSfx = love.audio.newSource("sounds/done.ogg", "static")
+
+  onRestart()
 
   computeDropY()
 end
@@ -56,17 +66,12 @@ end
 function love.draw()
   local r = (state.tNextDown - state.t) / state.dtForDown
 
+  -- 0.5 -> 2 | 0.8 -> 5
   if r > 0.5 then
     r = (r - 0.5) * 2
   else
     r = 0
   end
-
-  -- if r > 0.8 then
-  --   r = (r - 0.8) * 5
-  -- else
-  --   r = 0
-  -- end
 
   screen.startDraw()
 
@@ -99,6 +104,7 @@ function moveDown() -- return true if it has hit
 
     local newLines = T.computeLines(state.board)
     if newLines > 0 then
+      love.audio.play(doneSfx)
       state.lines = state.lines + newLines
       local deltaScore = 2 ^ (newLines - 1)
       state.score = state.score + deltaScore
@@ -165,17 +171,20 @@ function onPause()
 end
 
 function onDrop()
+  love.audio.play(tickSfx)
   while not moveDown() do
   end
   resetTimer()
 end
 
 function onDownOnce()
+  love.audio.play(tickSfx)
   moveDown()
   resetTimer()
 end
 
 function onLeft()
+  love.audio.play(tickSfx)
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
     state.x = state.x - 1
     computeDropY()
@@ -183,6 +192,7 @@ function onLeft()
 end
 
 function onRight()
+  love.audio.play(tickSfx)
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
     state.x = state.x + 1
     computeDropY()
@@ -190,12 +200,14 @@ function onRight()
 end
 
 function onCCW()
+  love.audio.play(tickSfx)
   state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()
 end
 
 function onCW()
+  love.audio.play(tickSfx)
   state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()

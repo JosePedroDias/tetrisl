@@ -21,12 +21,15 @@ eval that to make `lua5.1` know about the libraries
 
 ### windows
 
-TODO NEEDS TESTING
 in an admin powershell do:
 
+    > choco install microsoft-build-tools
     > choco install lua5.1
     > choco install luarocks
-    > luarocks --lua-dir=/usr/local/opt/lua@5.1 install luasocket
+
+in a visual c++ 2017 x86 native build tools command prompt with admin do:
+
+    > luarocks install luasocket
 
 ## instructions
 

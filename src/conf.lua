@@ -1,6 +1,12 @@
--- local consts = require "src.consts"
+-- https://love2d.org/wiki/Config_Files
 
 love.conf = function(t)
+  t.identity = "tetris"
+  t.appendidentity = true
+  t.highdpi = true
+  t.accelerometerjoystick = false
+  t.version = "11.0"
+  t.externalstorage = true
   t.modules.joystick = false
   t.modules.physics = false
   t.window.width = 0

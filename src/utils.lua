@@ -98,6 +98,15 @@ M.tableLength = function(tbl)
   return len
 end
 
+M.tableHas = function(tbl, item)
+  for _, v in pairs(tbl) do
+    if v == item then
+      return true
+    end
+  end
+  return false
+end
+
 M.join = function(tbl, sep)
   local s = ""
   local len = M.tableLength(tbl)

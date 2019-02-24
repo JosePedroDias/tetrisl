@@ -197,8 +197,8 @@ function isLineFilled(board, y)
   return counter == consts.w
 end
 
-function computeLines(board)
-  local numLines = 0
+function computeLines(board, alsoMoveThem)
+  local filledLines = {}
 
   function emptyCell(board, x, y)
     board[id2(x, y)] = 0
@@ -207,15 +207,19 @@ function computeLines(board)
   local y = consts.h
   while y > 0 do
     if isLineFilled(board, y) then
-      numLines = numLines + 1
-      iterateBoardLine(board, y, emptyCell)
-      moveLinesDown(board, y)
+      table.insert(filledLines, y)
+      if alsoMoveThem then
+        iterateBoardLine(board, y, emptyCell)
+        moveLinesDown(board, y)
+      else
+        y = y - 1
+      end
     else
       y = y - 1
     end
   end
 
-  return numLines
+  return filledLines
 end
 
 ---- DRAWING FUNCTIONS
@@ -305,10 +309,11 @@ function drawBrick(pos0, brickIdx, brickVar, isGhost)
   end
 end
 
-function drawBoard(board)
+function drawBoard(board, destroyedLines)
   function fn(b, x, y)
+    local wasDestroyed = utils.tableHas(destroyedLines, y)
     local v = b[id2(x, y)]
-    drawCell(v, x - 1, y - 1)
+    drawCell(v, x - 1, y - 1, wasDestroyed)
   end
   iterateBoard(board, fn)
 end

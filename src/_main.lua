@@ -10,6 +10,8 @@ local tickSfx, doneSfx
 
 local G = love.graphics
 
+local BLINK_DELTA = 1 / 4
+
 function getRandomBrickIdx()
   return love.math.random(#T.BRICKS)
 end
@@ -18,6 +20,9 @@ local state = {}
 
 function resetTimer()
   state.tNextDown = state.t + state.dtForDown
+  if state.tNextLineAnim then
+    state.tNextDown = state.tNextDown + state.dtForLineAnim
+  end
 end
 
 function levelUp()
@@ -64,28 +69,34 @@ function love.load()
 end
 
 function love.draw()
-  local r = (state.tNextDown - state.t) / state.dtForDown
+  local r = 0
 
-  -- 0.5 -> 2 | 0.8 -> 5
-  if r > 0.5 then
-    r = (r - 0.5) * 2
-  else
-    r = 0
+  if state.tNextLineAnim == nil then
+    r = (state.tNextDown - state.t) / state.dtForDown
+
+    -- 0.5 -> 2 | 0.8 -> 5
+    if r > 0.8 then
+      r = (r - 0.8) * 5
+    else
+      r = 0
+    end
   end
 
   screen.startDraw()
 
   T.drawBoardBackground()
 
-  T.drawBoard(state.board)
+  T.drawBoard(state.board, state.t % BLINK_DELTA < BLINK_DELTA / 2 and state.destroyedLines or {})
 
-  if state.y ~= state.dropY then
-    T.drawBrick({state.x, state.dropY}, state.brickIdx, state.brickVar, true)
+  if state.tNextLineAnim == nil then
+    if state.y ~= state.dropY then
+      T.drawBrick({state.x, state.dropY}, state.brickIdx, state.brickVar, true)
+    end
+
+    T.drawBrick({state.x, state.y + (1 - r - 1)}, state.brickIdx, state.brickVar)
+
+    T.drawBrick({13, 0}, state.nextBrickIdx, 1)
   end
-
-  T.drawBrick({state.x, state.y + (1 - r - 1)}, state.brickIdx, state.brickVar)
-
-  T.drawBrick({13, 0}, state.nextBrickIdx, 1)
 
   G.setColor(1, 1, 1, 1)
   G.print("level:" .. state.level .. "  score:" .. state.score .. "  lines:" .. state.lines)
@@ -102,8 +113,11 @@ function moveDown() -- return true if it has hit
   if hits then
     T.applyBrickToBoard(state.brickIdx, state.brickVar, state.board, state.x, state.y)
 
-    local newLines = T.computeLines(state.board)
+    state.destroyedLines = T.computeLines(state.board, false)
+    local newLines = #state.destroyedLines
     if newLines > 0 then
+      state.tNextLineAnim = state.t + state.dtForLineAnim
+      --state.tNextDown = state.tNextDown + state.dtForLineAnim
       love.audio.play(doneSfx)
       state.lines = state.lines + newLines
       local deltaScore = 2 ^ (newLines - 1)
@@ -137,7 +151,13 @@ function love.update(dt)
     return
   end
 
-  if state.t > state.tNextDown then
+  if state.tNextLineAnim then
+    if state.t > state.tNextLineAnim then
+      T.computeLines(state.board, true)
+      state.tNextLineAnim = nil
+      state.destroyedLines = {}
+    end
+  elseif state.t > state.tNextDown then
     moveDown()
     resetTimer()
   end
@@ -160,6 +180,10 @@ function onRestart()
   state.dtForDown = 1.5
   state.tNextDown = 1.5
   state.level = 1
+  state.lineAnimLines = {}
+  state.dtForLineAnim = 1
+  -- state.tNextLineAnim = -1
+  state.destroyedLines = {}
 end
 
 function onPause()
@@ -220,6 +244,10 @@ end
 -- ACTIONS VIA KEYS
 
 function love.keypressed(key, scancode, is_repeat)
+  if state.tNextLineAnim then
+    return
+  end
+
   if false then
     if key == "up" then
       onDrop()

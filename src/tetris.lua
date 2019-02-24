@@ -222,34 +222,55 @@ end
 
 local G = love.graphics
 
-local CANVAS
+local CANVAS = {}
+local GHOST_ALPHA = 0.33
 
-function prepare()
-  CANVAS = G.newCanvas(consts.cell, consts.cell)
-  G.setCanvas(CANVAS)
+function drawGradient(cell, maxAlpha)
+  for y = 0, cell - 1 do
+    local r = 1 - y / cell
+    G.setColor(r, r, r, 0.66 * maxAlpha)
+    G.rectangle("fill", 0, y, cell, 1)
+  end
+end
 
-  local c = consts.cell
-  local gap = c / 6
-  local a = gap
-  local b = c - gap
-
-  G.setColor(0.5, 0.5, 0.5, 1)
-  G.rectangle("fill", 0, 0, consts.cell, consts.cell)
-
-  --[[
+--[[
     0 a   b c
     a
 
     b
     c
   ]]
-  G.setColor(1, 1, 1, 1)
+function drawBevel(cell, gap, maxAlpha)
+  local c = consts.cell
+  local gap = c / 6
+  local a = gap
+  local b = c - gap
+
+  G.setColor(1, 1, 1, 0.5 * maxAlpha)
   G.polygon("fill", 0, 0, c, 0, b, a, a, a, a, b, 0, c, 0, 0)
 
-  G.setColor(0, 0, 0, 1)
+  G.setColor(0, 0, 0, 0.5 * maxAlpha)
   G.polygon("fill", c, c, 0, c, a, b, b, b, b, a, c, 0, c, c)
+end
 
-  G.setCanvas()
+function prepare()
+  local c = consts.cell
+
+  for i = 1, 2 do
+    CANVAS[i] = G.newCanvas(c, c)
+    G.setCanvas(CANVAS[i])
+
+    local maxAlpha = i == 1 and 1 or GHOST_ALPHA * 2
+
+    G.setColor(0.5, 0.5, 0.5, 1)
+    G.rectangle("fill", 0, 0, c, c)
+
+    drawGradient(c, maxAlpha)
+
+    drawBevel(c, c / 6, maxAlpha)
+
+    G.setCanvas()
+  end
 end
 
 function drawCell(colorIdx, x, y, isGhost)
@@ -257,12 +278,22 @@ function drawCell(colorIdx, x, y, isGhost)
     return
   end
   local clr = COLORS[colorIdx]
-  local alpha = isGhost and 0.25 or 1
+  local alpha = isGhost and GHOST_ALPHA or 1
   G.setColor(clr[1], clr[2], clr[3], alpha)
   local x1 = consts.x0 + x * consts.cell
   local y1 = consts.y0 + y * consts.cell
-  --G.rectangle("fill", x1, y1, consts.cell, consts.cell)
-  G.draw(CANVAS, x1, y1)
+
+  G.rectangle("fill", x1, y1, consts.cell, consts.cell)
+
+  local canvas = CANVAS[isGhost and 2 or 1]
+
+  G.setBlendMode("darken", "premultiplied")
+  G.draw(canvas, x1, y1)
+
+  G.setBlendMode("lighten", "premultiplied")
+  G.draw(canvas, x1, y1)
+
+  G.setBlendMode("alpha")
 end
 
 function drawBrick(pos0, brickIdx, brickVar, isGhost)

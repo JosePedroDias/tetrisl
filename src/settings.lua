@@ -1,8 +1,6 @@
 local M = {}
 
--- will be stored at
--- C:\Users\josep\AppData\Roaming\LOVE\tetris\settings.txt
-
+-- will be stored at: C:\Users\josep\AppData\Roaming\LOVE\tetris\settings.txt
 local SETTINGS_FILE = "settings.txt"
 
 local valuesInMemory = {"gameboy", "gameboy"}
@@ -17,8 +15,6 @@ end
 
 M.load = function()
   local data = love.filesystem.read(SETTINGS_FILE)
-  -- print("data", data)
-
   if data == nil then
     return M.get()
   end

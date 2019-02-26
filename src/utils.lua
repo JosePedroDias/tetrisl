@@ -115,6 +115,14 @@ M.tableIndexOf = function(tbl, item)
   end
 end
 
+M.tableMap = function(tbl, cb)
+  local res = {}
+  for i, v in ipairs(tbl) do
+    table.insert(res, cb(v, i))
+  end
+  return res
+end
+
 M.join = function(tbl, sep)
   local s = ""
   local len = M.tableLength(tbl)

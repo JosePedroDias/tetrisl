@@ -63,7 +63,8 @@ function moveDown() -- return true if it has hit
 
     state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
     if state.x == -1 then
-      state.ended = true
+      -- state.ended = true
+      stages.toStage("arcadeinput", state.score)
     end
   else
     state.y = state.y + 1

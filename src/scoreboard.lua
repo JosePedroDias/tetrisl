@@ -39,6 +39,10 @@ M.add = function(who, points)
     end
   )
 
+  if #scores > 10 then
+    scores[11] = nil
+  end
+
   -- print(utils.tableToString(scores))
 
   local data = ""

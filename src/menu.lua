@@ -9,15 +9,20 @@ local M = {}
 
 local options = {
   "start game",
-  "controls",
-  "bricks"
+  "see high scores",
+  "change controls",
+  "change bricks"
 }
 
 local possibleValues = {
   {""},
+  {""},
   {"gameboy", "tetris99"},
   {"gameboy", "tetris99"}
 }
+
+local IDX_CTRLS = 3
+local IDX_BRICK = 4
 
 local state = {}
 
@@ -26,15 +31,16 @@ M.load = function()
 
   state.chosenOption = 1
   state.chosenIndices = {
-    utils.tableIndexOf(possibleValues[2], controls),
-    utils.tableIndexOf(possibleValues[3], bricks),
-    1
+    1,
+    1,
+    utils.tableIndexOf(possibleValues[IDX_CTRLS], controls),
+    utils.tableIndexOf(possibleValues[IDX_BRICK], bricks)
   }
 end
 
 M.unload = function()
-  local controls = possibleValues[2][state.chosenIndices[2]]
-  local bricks = possibleValues[2][state.chosenIndices[3]]
+  local controls = possibleValues[IDX_CTRLS][state.chosenIndices[IDX_CTRLS]]
+  local bricks = possibleValues[IDX_BRICK][state.chosenIndices[IDX_BRICK]]
   settings.save(controls, bricks)
 end
 
@@ -47,7 +53,7 @@ M.draw = function()
   local y = (consts.H - dy * #options) / 2
 
   for i, option in ipairs(options) do
-    local alpha = 1
+    local alpha = 1 -- TODO: alpha borked
     local bullet = "  "
     if state.chosenOption == i then
       alpha = 1
@@ -69,6 +75,8 @@ M.onKey = function(key)
   elseif key == "return" or key == "space" then
     if state.chosenOption == 1 then
       stages.toStage("game")
+    elseif state.chosenOption == 2 then
+      stages.toStage("highscores")
     else
       state.chosenIndices[state.chosenOption] =
         utils.plus(state.chosenIndices[state.chosenOption], 1, #possibleValues[state.chosenOption])

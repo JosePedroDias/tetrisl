@@ -48,7 +48,6 @@ in a visual c++ 2017 x86 native build tools command prompt with admin do:
 ## TODO
 
 - make settings change game
-- top ten high scores
 - hold brick
 - tweak speeds, levels, scores
 - decent sfx

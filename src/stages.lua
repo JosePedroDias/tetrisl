@@ -8,12 +8,12 @@ M.setStage = function(stageName, stageValue)
   stages[stageName] = stageValue
 end
 
-M.toStage = function(stageName)
+M.toStage = function(stageName, hurdle)
   if M.currentStage then
     M.currentStage.unload()
   end
   M.currentStage = stages[stageName]
-  M.currentStage.load()
+  M.currentStage.load(hurdle)
 end
 
 M.exit = function()

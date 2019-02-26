@@ -107,6 +107,14 @@ M.tableHas = function(tbl, item)
   return false
 end
 
+M.tableIndexOf = function(tbl, item)
+  for i, v in ipairs(tbl) do
+    if v == item then
+      return i
+    end
+  end
+end
+
 M.join = function(tbl, sep)
   local s = ""
   local len = M.tableLength(tbl)

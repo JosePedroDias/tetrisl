@@ -5,12 +5,22 @@ local M = {}
 
 local SETTINGS_FILE = "settings.txt"
 
+local valuesInMemory = {"gameboy", "gameboy"}
+
+M.get = function()
+  return valuesInMemory[1], valuesInMemory[2]
+end
+
+M.set = function(controls, bricks)
+  valuesInMemory = {controls, bricks}
+end
+
 M.load = function()
   local data = love.filesystem.read(SETTINGS_FILE)
   -- print("data", data)
 
   if data == nil then
-    return "99", "99", "on"
+    return M.get()
   end
 
   local matches = {}
@@ -22,6 +32,7 @@ end
 
 M.save = function(controls, bricks)
   love.filesystem.write(SETTINGS_FILE, controls .. " " .. bricks)
+  M.set(controls, bricks)
 end
 
 return M

@@ -63,7 +63,7 @@ function moveDown() -- return true if it has hit
 
     state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
     if state.x == -1 then
-      error("game over")
+      state.ended = true
     end
   else
     state.y = state.y + 1
@@ -86,7 +86,7 @@ M.unload = function()
 end
 
 M.update = function(dt)
-  if state.paused then
+  if state.paused or state.ended then
     return
   end
 
@@ -122,7 +122,7 @@ M.draw = function()
 
   T.drawBoard(state.board, state.t % BLINK_DELTA < BLINK_DELTA / 2 and state.destroyedLines or {})
 
-  if state.tNextLineAnim == nil then
+  if state.tNextLineAnim == nil and not state.ended then
     if state.y ~= state.dropY then
       T.drawBrick({state.x, state.dropY}, state.brickIdx, state.brickVar, true)
     end
@@ -137,12 +137,16 @@ M.draw = function()
 
   if state.paused then
     G.print("P A U S E D", consts.W / 2 - 34, consts.H / 2 - 8)
+  elseif state.ended then
+    G.print("GAME OVER", consts.W / 2 - 34, consts.H / 2 - 8)
   end
 end
 
 -----
 
 function onRestart()
+  state.paused = false
+  state.ended = false
   state.nextBrickIdx = getRandomBrickIdx()
   state.brickIdx = getRandomBrickIdx()
   state.brickVar = 1
@@ -162,7 +166,9 @@ function onRestart()
 end
 
 function onPause()
-  if state.paused then
+  if state.ended then
+    return
+  elseif state.paused then
     state.paused = nil
   else
     state.paused = true
@@ -170,6 +176,9 @@ function onPause()
 end
 
 function onDrop()
+  if state.paused or state.ended then
+    return
+  end
   love.audio.play(tickSfx)
   while not moveDown() do
   end
@@ -177,12 +186,18 @@ function onDrop()
 end
 
 function onDownOnce()
+  if state.paused or state.ended then
+    return
+  end
   love.audio.play(tickSfx)
   moveDown()
   resetTimer()
 end
 
 function onLeft()
+  if state.paused or state.ended then
+    return
+  end
   love.audio.play(tickSfx)
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
     state.x = state.x - 1
@@ -191,6 +206,9 @@ function onLeft()
 end
 
 function onRight()
+  if state.paused or state.ended then
+    return
+  end
   love.audio.play(tickSfx)
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
     state.x = state.x + 1
@@ -199,6 +217,9 @@ function onRight()
 end
 
 function onCCW()
+  if state.paused or state.ended then
+    return
+  end
   love.audio.play(tickSfx)
   state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
@@ -206,6 +227,9 @@ function onCCW()
 end
 
 function onCW()
+  if state.paused or state.ended then
+    return
+  end
   love.audio.play(tickSfx)
   state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)

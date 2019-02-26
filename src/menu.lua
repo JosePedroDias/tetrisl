@@ -8,15 +8,15 @@ local G = love.graphics
 local M = {}
 
 local options = {
+  "start game",
   "controls",
-  "bricks",
-  "start game"
+  "bricks"
 }
 
 local possibleValues = {
+  {""},
   {"gameboy", "tetris99"},
-  {"gameboy", "tetris99"},
-  {""}
+  {"gameboy", "tetris99"}
 }
 
 local state = {}
@@ -26,15 +26,15 @@ M.load = function()
 
   state.chosenOption = 1
   state.chosenIndices = {
-    utils.tableIndexOf(possibleValues[1], controls),
-    utils.tableIndexOf(possibleValues[2], bricks),
+    utils.tableIndexOf(possibleValues[2], controls),
+    utils.tableIndexOf(possibleValues[3], bricks),
     1
   }
 end
 
 M.unload = function()
-  local controls = possibleValues[1][state.chosenIndices[1]]
-  local bricks = possibleValues[2][state.chosenIndices[2]]
+  local controls = possibleValues[2][state.chosenIndices[2]]
+  local bricks = possibleValues[2][state.chosenIndices[3]]
   settings.save(controls, bricks)
 end
 
@@ -67,7 +67,7 @@ M.onKey = function(key)
   elseif key == "down" then
     state.chosenOption = utils.plus(state.chosenOption, 1, #options)
   elseif key == "return" or key == "space" then
-    if state.chosenOption == #options then
+    if state.chosenOption == 1 then
       stages.toStage("game")
     else
       state.chosenIndices[state.chosenOption] =

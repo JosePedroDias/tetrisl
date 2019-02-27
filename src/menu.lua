@@ -27,7 +27,7 @@ local IDX_BRICK = 4
 local state = {}
 
 M.load = function()
-  local controls, bricks = settings.load()
+  local controls, bricks = settings.get()
 
   state.chosenOption = 1
   state.chosenIndices = {

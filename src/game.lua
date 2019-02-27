@@ -79,6 +79,7 @@ end
 
 M.load = function()
   T.prepare()
+  T.setBricks(settings.bricks)
   onRestart()
   computeDropY()
 end
@@ -111,12 +112,7 @@ M.draw = function()
   if state.tNextLineAnim == nil then
     r = (state.tNextDown - state.t) / state.dtForDown
 
-    -- 0.5 -> 2 | 0.8 -> 5
-    if r > 0.8 then
-      r = (r - 0.8) * 5
-    else
-      r = 0
-    end
+    r = r * r * r
   end
 
   T.drawBoardBackground()
@@ -204,6 +200,7 @@ function onLeft()
     state.x = state.x - 1
     computeDropY()
   end
+  resetTimer()
 end
 
 function onRight()
@@ -215,6 +212,7 @@ function onRight()
     state.x = state.x + 1
     computeDropY()
   end
+  resetTimer()
 end
 
 function onCCW()
@@ -225,6 +223,7 @@ function onCCW()
   state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()
+  resetTimer()
 end
 
 function onCW()
@@ -235,6 +234,7 @@ function onCW()
   state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()
+  resetTimer()
 end
 
 -----
@@ -244,7 +244,7 @@ M.onKey = function(key)
     return
   end
 
-  if false then
+  if settings.controls == "tetris99" then
     if key == "up" then
       onDrop()
     elseif key == "down" then
@@ -258,7 +258,7 @@ M.onKey = function(key)
     elseif key == "x" then
       onCCW()
     end
-  else
+  else -- gameboy
     if key == "up" then
       onCCW()
     elseif key == "down" then

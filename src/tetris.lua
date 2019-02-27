@@ -1,6 +1,8 @@
 local consts = require "src.consts"
 local utils = require "src.utils"
 
+local M = {}
+
 local KIND = {}
 KIND.I = 1
 KIND.J = 2
@@ -22,9 +24,17 @@ local COLORS = {
   {1, 0, 0} -- 7 / red / Z
 }
 
-local BRICKS = {}
-(require "src.bricks99")(BRICKS)
---(require "src.bricksGb")(BRICKS)
+local brickCollections = {
+  tetris99 = require "src.bricks_99",
+  gameboy = require "src.bricks_gb"
+}
+
+local BRICKS
+
+function setBricks(flavour)
+  BRICKS = brickCollections[flavour]
+  M.BRICKS = BRICKS
+end
 
 function brickFromString(st)
   local br = {}
@@ -122,7 +132,7 @@ end
 
 function doesBrickHitBoard(brickIdx, brickVar, board, x, y)
   local items = BRICKS[brickIdx][brickVar]
-  for k, v in pairs(items) do
+  for k, v in ipairs(items) do
     local X = v[1] + x + 1
     if X < 1 or X > consts.w then
       return true
@@ -258,6 +268,10 @@ function drawBevel(cell, gap, maxAlpha)
 end
 
 function prepare()
+  if #CANVAS == 2 then
+    return
+  end
+
   local c = consts.cell
 
   for i = 1, 2 do
@@ -328,25 +342,15 @@ function drawBoardBackground()
   end
 end
 
-return {
-  BRICKS = BRICKS,
-  COLORS = COLORS,
-  KIND = KIND,
-  brickFromString = brickFromString,
-  id2 = id2,
-  id2Rev = id2Rev,
-  iterateBoard = iterateBoard,
-  boardFromString = boardFromString,
-  boardToString = boardToString,
-  emptyBoard = emptyBoard,
-  randomBoard = randomBoard,
-  doesBrickHitBoard = doesBrickHitBoard,
-  applyBrickToBoard = applyBrickToBoard,
-  electNearestPosition = electNearestPosition,
-  computeLines = computeLines,
-  prepare = prepare,
-  drawCell = drawCell,
-  drawBrick = drawBrick,
-  drawBoard = drawBoard,
-  drawBoardBackground = drawBoardBackground
-}
+M.applyBrickToBoard = applyBrickToBoard
+M.computeLines = computeLines
+M.doesBrickHitBoard = doesBrickHitBoard
+M.drawBoard = drawBoard
+M.drawBoardBackground = drawBoardBackground
+M.drawBrick = drawBrick
+M.electNearestPosition = electNearestPosition
+M.emptyBoard = emptyBoard
+M.prepare = prepare
+M.setBricks = setBricks
+
+return M

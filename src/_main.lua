@@ -1,25 +1,22 @@
 local consts = require "src.consts"
 local screen = require "src.screen"
 local stages = require "src.stages"
+local settings = require "src.settings"
 
 local menu = require "src.menu"
 local game = require "src.game"
 local arcadeinput = require "src.arcadeinput"
 local highscores = require "src.highscores"
 
--- local scoreboard = require "src.scoreboard"
-
 local G = love.graphics
 
 function love.load()
-  -- scoreboard.load()
-  -- scoreboard.add("tony", 42)
+  settings.load()
 
   love.keyboard.setKeyRepeat(true)
 
   -- image resolution fix
   local sW, sH = screen.getCurrentResolution()
-  -- print("screenDims: " .. sW .. " x " .. sH)
   screen.setSize(sW, sH, consts.W, consts.H, true)
 
   -- load resources
@@ -38,6 +35,8 @@ function love.load()
   stages.setStage("highscores", highscores)
 
   stages.toStage("menu")
+
+  settings.load()
 end
 
 function love.update(dt)

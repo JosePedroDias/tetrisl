@@ -47,10 +47,9 @@ in a visual c++ 2017 x86 native build tools command prompt with admin do:
 
 ## TODO
 
+- make game playable in touch
 - hold brick
 - tweak speeds, levels, scores
-- decent sfx
-- placeholder music?
 - network
   - log events as udp
   - lobby to pair 2 ppl

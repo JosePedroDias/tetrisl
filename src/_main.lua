@@ -2,6 +2,7 @@ local consts = require "src.consts"
 local screen = require "src.screen"
 local stages = require "src.stages"
 local settings = require "src.settings"
+local assets = require "src.assets"
 
 local menu = require "src.menu"
 local game = require "src.game"
@@ -20,14 +21,7 @@ function love.load()
   screen.setSize(sW, sH, consts.W, consts.H, true)
 
   -- load resources
-  local f1 =
-    G.newImageFont(
-    "fonts/1.png",
-    ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
-  )
-  G.setFont(f1)
-  tickSfx = love.audio.newSource("sounds/tick.ogg", "static")
-  doneSfx = love.audio.newSource("sounds/done.ogg", "static")
+  assets.load()
 
   stages.setStage("menu", menu)
   stages.setStage("game", game)

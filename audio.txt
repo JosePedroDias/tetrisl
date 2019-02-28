@@ -1,0 +1,28 @@
+https://www.leshylabs.com/apps/sfMaker/
+
+
+line           w=Noise,W=44100,f=55.565,v=3.723,V=0.6,t=78.777,T=0.2,_=-0.018,d=101.343,D=0.2,p=1.051,a=0.1,A=0.2,b=0,r=0.3,s=3,S=9.643,g=0.467,l=0.891,e=Sawtooth,N=47,F=459.443,B=Fixed,E=21317
+rotate         w=Square,W=44100,f=118.53,v=74.33,V=16.291,t=1.847,T=0.086,_=-0.152,d=92.931,D=0.291,p=1.523,b=0.3,r=0.6,s=141,S=6.408,g=0.613,l=0.204,L=1.309
+move           W=44100,f=385.104,v=165.803,V=12.566,_=-0.532,d=275.907,D=0.339,p=1.536,b=0.3,r=0.2,c=-46,C=99.573,s=29,S=6.171,g=0.531,l=0.12,L=1.861
+drop           w=Sawtooth,W=44100,f=1972.275,v=152.867,V=33.275,t=187.348,T=0.319,_=0.079,d=101.548,D=0.164,p=1.607,A=0.1,b=0.3,r=0.5,c=-469,C=10.799,g=0.549,l=0.307
+drop hard      w=Noise,W=22050,f=142.151,v=91.25,V=7.386,t=155.071,T=0.491,_=-0.108,d=97.3,D=0.282,p=1.444,A=0.1,b=0,r=0.4,s=2,S=3.029,g=0.241,l=0.398,L=1.912,e=Sine,N=8,F=451.581,B=Fixed,E=34053
+level up       W=44100,f=797.539,v=152.867,V=33.275,t=189.119,T=0.319,_=0.569,d=66.062,D=0.589,p=1.607,A=0.1,b=0.3,r=0.5,c=-440,C=10.799,s=6,S=429.182,g=0.412,l=0.5,L=1.309
+
+
+
+
+https://pernyblom.github.io/abundant-music/index.html
+
+
+
+https://www.xmedia-recode.de/download.html
+
+
+https://freemusicarchive.org/genre/Chiptune/?sort=track_date_published&d=1&page=10
+http://freemusicarchive.org/music/RoccoW/_1035/RoccoW_-__-_04_SwingJeDing
+
+
+
+https://www.fontsquirrel.com/fonts/list/find_fonts/350?filter%5Bdownload%5D=local
+greyscale basic https://www.fontsquirrel.com/fonts/list/foundry/greyscalenet
+great lakes https://www.fontsquirrel.com/fonts/list/foundry/nicks-fonts

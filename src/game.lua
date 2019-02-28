@@ -2,6 +2,7 @@ local consts = require "src.consts"
 local utils = require "src.utils"
 local settings = require "src.settings"
 local stages = require "src.stages"
+local assets = require "src.assets"
 local T = require "src.tetris"
 
 local M = {}
@@ -26,6 +27,7 @@ end
 function levelUp()
   state.level = state.level + 1
   state.dtForDown = state.dtForDown - 0.2
+  love.audio.play(assets.sfx.levelUp)
 end
 
 function computeDropY()
@@ -46,7 +48,7 @@ function moveDown() -- return true if it has hit
     if newLines > 0 then
       state.tNextLineAnim = state.t + state.dtForLineAnim
       --state.tNextDown = state.tNextDown + state.dtForLineAnim
-      love.audio.play(doneSfx)
+      love.audio.play(assets.sfx.line)
       state.lines = state.lines + newLines
       local deltaScore = 2 ^ (newLines - 1)
       state.score = state.score + deltaScore
@@ -82,9 +84,13 @@ M.load = function()
   T.setBricks(settings.bricks)
   onRestart()
   computeDropY()
+
+  assets.music.swingjeding:play()
+  --assets.music.swingjeding.setLooping(true)
 end
 
 M.unload = function()
+  assets.music.swingjeding:stop()
 end
 
 M.update = function(dt)
@@ -176,7 +182,7 @@ function onDrop()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(tickSfx)
+  love.audio.play(assets.sfx.dropHard)
   while not moveDown() do
   end
   resetTimer()
@@ -186,7 +192,7 @@ function onDownOnce()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(tickSfx)
+  --love.audio.play(assets.sfx.drop)
   moveDown()
   resetTimer()
 end
@@ -195,7 +201,7 @@ function onLeft()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(tickSfx)
+  love.audio.play(assets.sfx.move)
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
     state.x = state.x - 1
     computeDropY()
@@ -207,7 +213,7 @@ function onRight()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(tickSfx)
+  love.audio.play(assets.sfx.move)
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
     state.x = state.x + 1
     computeDropY()
@@ -219,7 +225,7 @@ function onCCW()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(tickSfx)
+  love.audio.play(assets.sfx.rotate)
   state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()
@@ -230,7 +236,7 @@ function onCW()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(tickSfx)
+  love.audio.play(assets.sfx.rotate)
   state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()

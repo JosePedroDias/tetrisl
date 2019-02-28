@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>bitmap font renderer</title>
+
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+
+    <style>
+      @font-face {
+        font-family: greatlakes;
+        src: url(greatlakes.ttf);
+      }
+
+      @font-face {
+        font-family: greyscale_basic_bold;
+        src: url(greyscale_basic_bold.ttf);
+      }
+
+      body {
+        padding: 0;
+        margin: 0;
+        background-color: #ddd;
+      }
+
+      canvas {
+        border: 1px solid #040;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script src="bitmapFontRenderer.js"></script>
+    <script>
+      var s = 2;
+      bitmapFontRenderer({
+        font: 'greyscale_basic_bold',
+        ext: 'ttf',
+        size: 20 * s,
+        color: '#FFF',
+        splitColor: '#F0F',
+        splitW: s,
+        gap: s,
+        characters:
+          ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.!?;:-_/|\\!\'"+*()[]{}<>&%$#@',
+        //roundTo: 64,
+        xdraw: function(c, ch, x, y, o) {
+          c.fillStyle = '#00F';
+          c.fillText(ch, x - s, y);
+          c.fillText(ch, x + s, y);
+          c.fillText(ch, x, y - s);
+          c.fillText(ch, x, y + s);
+          c.fillStyle = o.color;
+          c.fillText(ch, x, y);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -3,25 +3,14 @@ local utils = require "src.utils"
 
 local M = {}
 
-local KIND = {}
-KIND.I = 1
-KIND.J = 2
-KIND.L = 3
-KIND.O = 4
-KIND.S = 5
-KIND.T = 6
-KIND.Z = 7
-
-local GRID_COLOR = {0.25, 0.25, 0.25}
-
 local COLORS = {
-  {0, 1, 1}, -- 1 / cyan / I
-  {0, 0, 1}, -- 2 / blue / J
+  {0.5, 1, 1}, -- 1 / cyan / I
+  {0.5, 0.5, 1}, -- 2 / blue / J
   {1, 0.5, 0}, -- 3 / orange / L
-  {1, 1, 0}, -- 4 / yellow / O
-  {0, 1, 0}, -- 5 / light green / S
-  {0.5, 0, 1}, -- 6 / purple / T
-  {1, 0, 0} -- 7 / red / Z
+  {1, 1, 0.5}, -- 4 / yellow / O
+  {0.5, 1, 0.5}, -- 5 / light green / S
+  {0.75, 0.5, 1}, -- 6 / purple / T
+  {1, 0.5, 0.5} -- 7 / red / Z
 }
 
 local brickCollections = {
@@ -36,7 +25,7 @@ local function setBricks(flavour)
   M.BRICKS = BRICKS
 end
 
-local function brickFromString(st)
+--[[ local function brickFromString(st)
   local br = {}
   local lines = utils.splitLines(st)
   for y, line in pairs(lines) do
@@ -48,20 +37,18 @@ local function brickFromString(st)
     end
   end
   return br
-end
-
+end ]]
 ---- BOARD RELATED
 
 local function id2(x, y)
   return y * 100 + x
 end
 
-local function id2Rev(id)
+--[[ local function id2Rev(id)
   local x = id % 100
   local y = (id - x) / 100
   return {x, y}
-end
-
+end ]]
 local function iterateBoard(board, fn)
   for y = 1, consts.h do
     for x = 1, consts.w do
@@ -76,7 +63,16 @@ local function iterateBoardLine(board, y, fn)
   end
 end
 
-local function boardFromString(st)
+local function emptyBoard()
+  local board = {}
+  local function emptyCell(board2, x, y)
+    board2[id2(x, y)] = 0
+  end
+  iterateBoard(board, emptyCell)
+  return board
+end
+
+--[[ local function boardFromString(st)
   local board = emptyBoard()
   local lines = utils.splitLines(st)
   for y, line in pairs(lines) do
@@ -94,11 +90,11 @@ end
 local function boardToString(board)
   local s = ""
   local lastY = -1
-  local function printCell(board, x, y)
+  local function printCell(board2, x, y)
     if y ~= lastY then
       s = s .. "\n"
     end
-    local v = board[id2(x, y)]
+    local v = board2[id2(x, y)]
     if v == 0 then
       v = " "
     end
@@ -109,38 +105,26 @@ local function boardToString(board)
   return s
 end
 
-local function emptyBoard()
-  local board = {}
-  local function emptyCell(board, x, y)
-    board[id2(x, y)] = 0
-  end
-  iterateBoard(board, emptyCell)
-  return board
-end
-
 local function randomBoard()
   local board = {}
-  local function fillCell(board, x, y)
+  local function fillCell(board_, x, y)
     local r = love.math.random()
     -- local isOn = r > 0.25
     local isOn = r < ((y - 2) / consts.h)
-    board[id2(x, y)] = (not isOn) and 0 or love.math.random(#BRICKS)
+    board_[id2(x, y)] = (not isOn) and 0 or love.math.random(#BRICKS)
   end
   iterateBoard(board, fillCell)
   return board
-end
-
+end ]]
 local function doesBrickHitBoard(brickIdx, brickVar, board, x, y)
   local items = BRICKS[brickIdx][brickVar]
-  for k, v in ipairs(items) do
+  for _, v in ipairs(items) do
     local X = v[1] + x + 1
     if X < 1 or X > consts.w then
       return true
     end
     local Y = v[2] + y + 1
-    if Y < 1 then
-      -- ignore these, brick not completely inside board
-    else
+    if Y >= 1 then
       if Y > consts.h then
         return true
       end
@@ -154,7 +138,7 @@ end
 
 local function applyBrickToBoard(brickIdx, brickVar, board, x, y)
   local items = BRICKS[brickIdx][brickVar]
-  for k, v in pairs(items) do
+  for _, v in pairs(items) do
     local X = v[1] + x + 1
     local Y = v[2] + y + 1
     board[id2(X, Y)] = brickIdx
@@ -196,8 +180,8 @@ end
 local function isLineFilled(board, y)
   local counter = 0
 
-  local function incIfPositive(board, x, y)
-    local v = board[id2(x, y)]
+  local function incIfPositive(board2, x, y2)
+    local v = board2[id2(x, y2)]
     if v > 0 then
       counter = counter + 1
     end
@@ -210,8 +194,8 @@ end
 local function computeLines(board, alsoMoveThem)
   local filledLines = {}
 
-  local function emptyCell(board, x, y)
-    board[id2(x, y)] = 0
+  local function emptyCell(board2, x, y)
+    board2[id2(x, y)] = 0
   end
 
   local y = consts.h
@@ -254,9 +238,7 @@ end
     b
     c
   ]]
-local function drawBevel(cell, gap, maxAlpha)
-  local c = consts.cell
-  local gap = c / 6
+local function drawBevel(c, gap, maxAlpha)
   local a = gap
   local b = c - gap
 
@@ -316,7 +298,7 @@ end
 
 local function drawBrick(pos0, brickIdx, brickVar, isGhost)
   local items = BRICKS[brickIdx][brickVar]
-  for k, v in pairs(items) do
+  for _, v in pairs(items) do
     local x = pos0[1] + v[1]
     local y = pos0[2] + v[2]
     drawCell(brickIdx, x, y, isGhost)
@@ -324,7 +306,7 @@ local function drawBrick(pos0, brickIdx, brickVar, isGhost)
 end
 
 local function drawBoard(board, destroyedLines)
-  function fn(b, x, y)
+  local function fn(b, x, y)
     local wasDestroyed = utils.tableHas(destroyedLines, y)
     local v = b[id2(x, y)]
     drawCell(v, x - 1, y - 1, wasDestroyed)

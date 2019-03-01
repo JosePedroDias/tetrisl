@@ -8,7 +8,7 @@ local M = {}
 local scale, x, y, canvas
 
 M.getCurrentResolution = function()
-  local os = love._os
+  -- local os = love._os
   local sW, sH, scl
 
   -- if os == "Android" then
@@ -25,7 +25,6 @@ M.getCurrentResolution = function()
 end
 
 M.getLowestResolution = function()
-  local modes = love.window.getFullscreenModes()
   local wi = 100000
   local hi = 100000
   local area = 100000 * 100000
@@ -42,7 +41,6 @@ M.getLowestResolution = function()
 end
 
 M.getHighestResolution = function()
-  local modes = love.window.getFullscreenModes()
   local wi = 0
   local hi = 0
   local area = 0

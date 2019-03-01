@@ -1,15 +1,19 @@
+local utils = require "utils"
+
 local M = {}
 
 local G = love.graphics
 
-local size = 46
+local size = 60
 local dist = 5
-local pos = {8.5 * size, 8 * size}
+local pos = {8.75 * size, 6 * size}
 
 local buttons
 local isDown
 local callbacks = {}
 local callbackNames = {"up", "left", "right", "down", "a", "b"}
+
+local isMobile = utils.isMobile()
 
 -- TODO: emulate key repeat to trigger additional cbs
 
@@ -40,6 +44,10 @@ M.setCallbacks = function(cbs)
 end
 
 M.draw = function()
+  if not isMobile then
+    return
+  end
+
   G.setColor(1, 1, 1, 0.75)
   for i, p in ipairs(buttons) do
     G.rectangle(isDown[i] and "fill" or "line", p[1], p[2], size, size)
@@ -47,6 +55,10 @@ M.draw = function()
 end
 
 M.onPointer = function(x, y)
+  if not isMobile then
+    return
+  end
+
   for i, b in ipairs(buttons) do
     if x >= b[1] and x <= b[1] + size and y > b[2] and y <= b[2] + size then
       local cb = callbacks[callbackNames[i]]

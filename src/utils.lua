@@ -61,7 +61,7 @@ M.arrayToString = function(tbl)
   local s = ""
   local len = M.tableLength(tbl)
   local i = 1
-  for k, v in pairs(tbl) do
+  for _, v in pairs(tbl) do
     if type(v) == "string" then
       v = '"' .. v .. '"'
     end
@@ -92,7 +92,7 @@ end
 
 M.tableLength = function(tbl)
   local len = 0
-  for k, v in pairs(tbl) do
+  for _, _ in pairs(tbl) do
     len = len + 1
   end
   return len
@@ -127,7 +127,7 @@ M.join = function(tbl, sep)
   local s = ""
   local len = M.tableLength(tbl)
   local i = 1
-  for k, v in pairs(tbl) do
+  for _, v in pairs(tbl) do
     if i < len then
       s = s .. v .. sep
     else
@@ -198,6 +198,11 @@ M.plus = function(v, minV, maxV, dontLoop)
     end
   end
   return v + 1
+end
+
+M.isMobile = function()
+  local os = love.system.getOS()
+  return os == "Android" or os == "iOS"
 end
 
 return M

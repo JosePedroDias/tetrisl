@@ -1,5 +1,4 @@
 local consts = require "src.consts"
-local utils = require "src.utils"
 local scoreboard = require "src.scoreboard"
 local stages = require "src.stages"
 
@@ -35,13 +34,13 @@ M.draw = function()
   G.print(l, x - w / 2, y - dy)
 
   for i, row in ipairs(scores) do
-    local l = row[1] .. " ... " .. row[2]
-    local w = f:getWidth(l)
-    G.print(l, x - w / 2, y + i * dy)
+    local l2 = row[1] .. " ... " .. row[2]
+    local w2 = f:getWidth(l)
+    G.print(l2, x - w2 / 2, y + i * dy)
   end
 end
 
-M.onKey = function(key)
+M.onKey = function()
   stages.toStage("menu")
 end
 

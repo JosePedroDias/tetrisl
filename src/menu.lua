@@ -7,6 +7,8 @@ local G = love.graphics
 
 local M = {}
 
+local isMobile = utils.isMobile()
+
 local options = {
   "start game",
   "see high scores",
@@ -52,7 +54,7 @@ M.draw = function()
   for i, option in ipairs(options) do
     local alpha = 1 -- TODO: alpha borked
     local bullet = "  "
-    if state.chosenOption == i then
+    if state.chosenOption == i and not isMobile then
       alpha = 1
       bullet = "- "
     end
@@ -94,7 +96,7 @@ M.onKey = function(key)
   end
 end
 
-M.onPointer = function(x, y)
+M.onPointer = function(_, y)
   local dy = 30
   local y0 = (consts.H - dy * #options) / 2
 

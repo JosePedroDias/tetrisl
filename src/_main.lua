@@ -9,8 +9,6 @@ local game = require "src.game"
 local arcadeinput = require "src.arcadeinput"
 local highscores = require "src.highscores"
 
-local G = love.graphics
-
 function love.load()
   settings.load()
 
@@ -43,11 +41,11 @@ function love.draw()
   screen.endDraw()
 end
 
-function love.keypressed(key, scancode, is_repeat)
+function love.keypressed(key) --, scancode, is_repeat)
   stages.currentStage.onKey(key)
 end
 
-function love.keyreleased(key, scancode, is_repeat)
+function love.keyreleased(key) -- , scancode)
   stages.currentStage.onKeyUp(key)
 end
 

@@ -31,6 +31,10 @@ in a visual c++ 2017 x86 native build tools command prompt with admin do:
 
     > luarocks install luasocket
 
+### both
+
+I recommend installing luacheck and vscode ext vscode-luacheck
+
 ## instructions
 
     keys:

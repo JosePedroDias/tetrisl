@@ -1,13 +1,12 @@
 local M = {fonts = {}, sfx = {}, music = {}, gfx = {}}
 
-local alpha1 = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.!?;:-_/|\\!\'"+*()[]{}&%$#@'
-local alpha2 = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.!?;:-_/|\\!\'"+*()[]{}<>&%$#@'
+local CHARS = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.!?;:-_/|\\!\'"+*()[]{}&%$#@'
 
 M.load = function()
   local f1 =
     love.graphics.newImageFont(
     "fonts/1.png", -- greyscale_basic_bold greatlakes 1
-    alpha1
+    CHARS
   )
   love.graphics.setFont(f1)
 

@@ -4,10 +4,12 @@ os := $(shell uname)
 
 ifeq ($(os),Darwin)
 	lua = lua5.1
+	luacheck = luacheck
 	love = /Applications/love.app/Contents/MacOS/love
 	open = open
 else
 	lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
+	luacheck = "C:\\ProgramData\\chocolatey\\lib\\luarocks\\luarocks-2.4.4-win32\\systree\\bin\\luacheck.bat"
 	love = "C:\\Program Files\\LOVE\\lovec"
 	open = explorer
 endif
@@ -47,6 +49,9 @@ export-lua:
 
 lua-repl:
 	@$(lua) -i
+
+lint:
+	@$(luacheck) src
 
 test:
 	@$(lua) tests/testy.lua tests/board.lua

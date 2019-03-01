@@ -17,7 +17,7 @@ M.load = function()
   local lines = utils.splitLines(data)
   -- print("#lines:", #lines)
 
-  function parseLine(line)
+  local function parseLine(line)
     local row = utils.split(line, SEP)
     row[1] = tonumber(row[1])
     -- print("line:", row[1], row[2])

@@ -3,6 +3,8 @@ local utils = require "src.utils"
 local scoreboard = require "src.scoreboard"
 local stages = require "src.stages"
 
+local touchcursor = require "src.touchcursor"
+
 local G = love.graphics
 
 local M = {}
@@ -53,18 +55,6 @@ local alphabet = {
 
 local state = {}
 
-M.load = function(score)
-  state.written = ""
-  state.index = 1
-  state.score = score
-end
-
-M.unload = function()
-end
-
-M.update = function(dt)
-end
-
 M.draw = function()
   local dy = 30
   local x = consts.W / 2
@@ -80,35 +70,74 @@ M.draw = function()
 
   G.print(l1, x - w1 / 2, y)
   G.print(l2, x - w2 / 2, y + dy)
+
+  touchcursor.draw()
 end
 
-function saveAndReturn(name)
+local function saveAndReturn(name)
   if string.len(name) > 0 then
     scoreboard.add(name, state.score)
   end
   stages.toStage("highscores")
 end
 
+local function onDown()
+  state.index = utils.minus(state.index, 1, #alphabet)
+end
+
+local function onUp()
+  state.index = utils.plus(state.index, 1, #alphabet)
+end
+
+local function onLeft()
+  state.written = string.sub(state.written, 1, #state.written - 1)
+  state.index = 1
+end
+
+local function onRight()
+  state.written = state.written .. alphabet[state.index]
+  state.index = 1
+end
+
+local function onEnter()
+  state.written = state.written .. alphabet[state.index]
+  saveAndReturn(state.written)
+end
+
 M.onKey = function(key)
   if key == "down" then
-    state.index = utils.minus(state.index, 1, #alphabet)
+    onDown()
   elseif key == "up" then
-    state.index = utils.plus(state.index, 1, #alphabet)
+    onUp()
   elseif key == "left" then
-    state.written = string.sub(state.written, 1, #state.written - 1)
-    state.index = 1
+    onLeft()
   elseif key == "right" then
-    state.written = state.written .. alphabet[state.index]
-    state.index = 1
+    onRight()
   elseif key == "return" then
-    state.written = state.written .. alphabet[state.index]
-    saveAndReturn(state.written)
+    onEnter()
   elseif key == "escape" then
     saveAndReturn("")
   end
 end
 
+M.load = function(score)
+  state.written = ""
+  state.index = 1
+  state.score = score
+
+  touchcursor.setCallbacks(
+    {
+      up = onUp,
+      down = onDown,
+      left = onLeft,
+      right = onRight,
+      a = onEnter
+    }
+  )
+end
+
 M.onPointer = function(x, y)
+  touchcursor.onPointer(x, y)
 end
 
 return M

@@ -15,9 +15,6 @@ M.load = function()
   scores = scoreboard.load()
 end
 
-M.unload = function()
-end
-
 M.update = function(dt)
   t = t + dt
   if t > 3 then
@@ -46,9 +43,6 @@ end
 
 M.onKey = function(key)
   stages.toStage("menu")
-end
-
-M.onPointer = function(x, y)
 end
 
 return M

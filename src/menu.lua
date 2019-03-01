@@ -44,13 +44,10 @@ M.unload = function()
   settings.save(controls, bricks)
 end
 
-M.update = function(dt)
-end
-
 M.draw = function()
   local dy = 30
-  local x = consts.W / 2 - 100
-  local y = (consts.H - dy * #options) / 2
+  local x0 = consts.W / 2 - 100
+  local y0 = (consts.H - dy * #options) / 2
 
   for i, option in ipairs(options) do
     local alpha = 1 -- TODO: alpha borked
@@ -63,8 +60,20 @@ M.draw = function()
     local value = possibleValues[i][state.chosenIndices[i]]
     G.setColor(1, 1, 1, alpha)
     local sep = value ~= "" and ": " or ""
-    G.print(bullet .. option .. sep .. value, x, y + dy * (i - 1))
+    G.print(bullet .. option .. sep .. value, x0, y0 + dy * (i - 1))
   end
+end
+
+local function onStartGame()
+  stages.toStage("game")
+end
+
+local function onHighscores()
+  stages.toStage("highscores")
+end
+
+local function onToggleOption(i)
+  state.chosenIndices[i] = utils.plus(state.chosenIndices[i], 1, #possibleValues[i])
 end
 
 M.onKey = function(key)
@@ -74,22 +83,33 @@ M.onKey = function(key)
     state.chosenOption = utils.plus(state.chosenOption, 1, #options)
   elseif key == "return" or key == "space" then
     if state.chosenOption == 1 then
-      stages.toStage("game")
+      onStartGame()
     elseif state.chosenOption == 2 then
-      stages.toStage("highscores")
+      onHighscores()
     else
-      state.chosenIndices[state.chosenOption] =
-        utils.plus(state.chosenIndices[state.chosenOption], 1, #possibleValues[state.chosenOption])
+      onToggleOption(state.chosenOption)
     end
   elseif key == "escape" then
     stages.exit()
-  -- else
-  -- print(key)
   end
 end
 
 M.onPointer = function(x, y)
-  -- print("pointer " .. x ", " .. y)
+  local dy = 30
+  local y0 = (consts.H - dy * #options) / 2
+
+  for i, _ in ipairs(options) do
+    local yi = y0 + dy * (i - 1)
+    if y >= yi and y <= yi + dy then
+      if i == 1 then
+        onStartGame()
+      elseif i == 2 then
+        onHighscores()
+      else
+        onToggleOption(i)
+      end
+    end
+  end
 end
 
 return M

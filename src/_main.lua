@@ -47,7 +47,21 @@ function love.keypressed(key, scancode, is_repeat)
   stages.currentStage.onKey(key)
 end
 
+function love.keyreleased(key, scancode, is_repeat)
+  stages.currentStage.onKeyUp(key)
+end
+
 function love.mousepressed(_x, _y)
   local x, y = screen.coords(_x, _y)
   stages.currentStage.onPointer(x, y)
+end
+
+function love.mousemoved(_x, _y)
+  local x, y = screen.coords(_x, _y)
+  stages.currentStage.onPointerMove(x, y)
+end
+
+function love.mousereleased(_x, _y)
+  local x, y = screen.coords(_x, _y)
+  stages.currentStage.onPointerUp(x, y)
 end

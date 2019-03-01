@@ -4,6 +4,7 @@ local settings = require "src.settings"
 local stages = require "src.stages"
 local assets = require "src.assets"
 local T = require "src.tetris"
+local touchcursor = require "src.touchcursor"
 
 local M = {}
 
@@ -13,24 +14,24 @@ local state = {}
 
 local BLINK_DELTA = 1 / 4
 
-function getRandomBrickIdx()
+local function getRandomBrickIdx()
   return love.math.random(#T.BRICKS)
 end
 
-function resetTimer()
+local function resetTimer()
   state.tNextDown = state.t + state.dtForDown
   if state.tNextLineAnim then
     state.tNextDown = state.tNextDown + state.dtForLineAnim
   end
 end
 
-function levelUp()
+local function levelUp()
   state.level = state.level + 1
   state.dtForDown = state.dtForDown - 0.2
   love.audio.play(assets.sfx.levelUp)
 end
 
-function computeDropY()
+local function computeDropY()
   local y = state.y
   while not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x, y) do
     y = y + 1
@@ -38,7 +39,7 @@ function computeDropY()
   state.dropY = y - 1
 end
 
-function moveDown() -- return true if it has hit
+local function moveDown() -- return true if it has hit
   local hits = T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x, state.y + 1)
   if hits then
     T.applyBrickToBoard(state.brickIdx, state.brickVar, state.board, state.x, state.y)
@@ -78,16 +79,6 @@ function moveDown() -- return true if it has hit
 end
 
 ----------------------
-
-M.load = function()
-  T.prepare()
-  T.setBricks(settings.bricks)
-  onRestart()
-  computeDropY()
-
-  assets.music.swingjeding:play()
-  --assets.music.swingjeding.setLooping(true)
-end
 
 M.unload = function()
   assets.music.swingjeding:stop()
@@ -143,11 +134,13 @@ M.draw = function()
   elseif state.ended then
     G.print("GAME OVER", consts.W / 2 - 34, consts.H / 2 - 8)
   end
+
+  touchcursor.draw()
 end
 
 -----
 
-function onRestart()
+local function onRestart()
   state.paused = false
   state.ended = false
   state.nextBrickIdx = getRandomBrickIdx()
@@ -168,7 +161,7 @@ function onRestart()
   state.destroyedLines = {}
 end
 
-function onPause()
+local function onPause()
   if state.ended then
     return
   elseif state.paused then
@@ -178,7 +171,7 @@ function onPause()
   end
 end
 
-function onDrop()
+local function onDrop()
   if state.paused or state.ended then
     return
   end
@@ -188,7 +181,7 @@ function onDrop()
   resetTimer()
 end
 
-function onDownOnce()
+local function onDownOnce()
   if state.paused or state.ended then
     return
   end
@@ -197,7 +190,7 @@ function onDownOnce()
   resetTimer()
 end
 
-function onLeft()
+local function onLeft()
   if state.paused or state.ended then
     return
   end
@@ -209,7 +202,7 @@ function onLeft()
   resetTimer()
 end
 
-function onRight()
+local function onRight()
   if state.paused or state.ended then
     return
   end
@@ -221,7 +214,7 @@ function onRight()
   resetTimer()
 end
 
-function onCCW()
+local function onCCW()
   if state.paused or state.ended then
     return
   end
@@ -232,7 +225,7 @@ function onCCW()
   resetTimer()
 end
 
-function onCW()
+local function onCW()
   if state.paused or state.ended then
     return
   end
@@ -287,23 +280,29 @@ M.onKey = function(key)
   end
 end
 
-M.onPointer = function(x, y)
-  local xR = x / consts.W
-  local yR = x / consts.H
+M.load = function()
+  T.prepare()
+  T.setBricks(settings.bricks)
+  onRestart()
+  computeDropY()
 
-  if yR < 0.25 then
-    onDrop()
-  elseif yR > 0.75 then
-    onDownOnce()
-  else
-    if xR < 0.333 then
-      onLeft()
-    elseif xR > 0.666 then
-      onRight()
-    else
-      onCCW()
-    end
-  end
+  assets.music.swingjeding:play()
+  --assets.music.swingjeding.setLooping(true)
+
+  touchcursor.setCallbacks(
+    {
+      up = onDrop,
+      down = onDownOnce,
+      left = onLeft,
+      right = onRight,
+      a = onCCW,
+      b = onCW
+    }
+  )
+end
+
+M.onPointer = function(x, y)
+  touchcursor.onPointer(x, y)
 end
 
 return M

@@ -4,8 +4,19 @@ local M = {
 
 local stages = {}
 
+local function noop()
+end
+
+local api = {"load", "update", "draw", "onKey", "onKeyUp", "onPointer", "onPointerMove", "onPointerUp", "unload"}
+
 M.setStage = function(stageName, stageValue)
   stages[stageName] = stageValue
+
+  for _, methodName in pairs(api) do
+    if stageValue[methodName] == nil then
+      stageValue[methodName] = noop
+    end
+  end
 end
 
 M.toStage = function(stageName, hurdle)

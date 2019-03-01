@@ -1,16 +1,10 @@
 local M = {fonts = {}, sfx = {}, music = {}, gfx = {}}
 
-local CHARS = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.!?;:-_/|\\!\'"+*()[]{}&%$#@'
-
 M.load = function()
-  local f1 =
-    love.graphics.newImageFont(
-    "fonts/1.png", -- greyscale_basic_bold greatlakes 1
-    CHARS
-  )
-  love.graphics.setFont(f1)
+  local notoF = love.graphics.newFont("fonts/permanent_marker.fnt")
+  love.graphics.setFont(notoF)
 
-  M.fonts["1"] = f1
+  M.fonts["noto"] = notoF
 
   local dropSfx = love.audio.newSource("sounds/drop.ogg", "static")
   local dropHardSfx = love.audio.newSource("sounds/drop_hard.ogg", "static")

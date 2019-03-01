@@ -69,6 +69,10 @@ I recommend installing luacheck and vscode ext vscode-luacheck
 - [luasocket](https://love2d.org/wiki/Tutorial:Networking_with_UDP)
 - [love2d-bitmap-font-renderer](https://github.com/JosePedroDias/love2d-bitmap-font-renderer)
 
+## useful tools
+
+- [bitmap font generator](http://www.angelcode.com/products/bmfont/)
+
 ## reference
 
 - [lua manual 5.1](https://www.lua.org/manual/5.1/)

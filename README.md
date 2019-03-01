@@ -71,7 +71,13 @@ I recommend installing luacheck and vscode ext vscode-luacheck
 
 ## useful tools
 
+- [sfmaker](https://www.leshylabs.com/apps/sfMaker/)
 - [bitmap font generator](http://www.angelcode.com/products/bmfont/)
+- [xmedia-recode](https://www.xmedia-recode.de)
+
+## credits
+
+- <http://freemusicarchive.org/music/RoccoW/_1035/RoccoW_-__-_04_SwingJeDing>
 
 ## reference
 

@@ -14,6 +14,8 @@ local options = {
   "see high scores",
   "change controls",
   "change bricks",
+  "sound effects",
+  "music",
   "exit"
 }
 
@@ -22,16 +24,25 @@ local possibleValues = {
   {""},
   {"gameboy", "tetris99"},
   {"gameboy", "tetris99"},
+  {"on", "off"},
+  {"on", "off"},
   {""}
 }
 
+local IDX_START = 1
+local IDX_HIGH = 2
+
 local IDX_CTRLS = 3
 local IDX_BRICK = 4
+local IDX_SFX = 5
+local IDX_MUSIC = 6
+
+local IDX_EXIT = 7
 
 local state = {}
 
 M.load = function()
-  local controls, bricks = settings.get()
+  local controls, bricks, sfx, music = settings.get()
 
   state.chosenOption = 1
   state.chosenIndices = {
@@ -39,6 +50,8 @@ M.load = function()
     1,
     utils.tableIndexOf(possibleValues[IDX_CTRLS], controls),
     utils.tableIndexOf(possibleValues[IDX_BRICK], bricks),
+    utils.tableIndexOf(possibleValues[IDX_SFX], sfx),
+    utils.tableIndexOf(possibleValues[IDX_MUSIC], music),
     1
   }
 end
@@ -46,7 +59,9 @@ end
 M.unload = function()
   local controls = possibleValues[IDX_CTRLS][state.chosenIndices[IDX_CTRLS]]
   local bricks = possibleValues[IDX_BRICK][state.chosenIndices[IDX_BRICK]]
-  settings.save(controls, bricks)
+  local sfx = possibleValues[IDX_SFX][state.chosenIndices[IDX_SFX]]
+  local music = possibleValues[IDX_MUSIC][state.chosenIndices[IDX_MUSIC]]
+  settings.save(controls, bricks, sfx, music)
 end
 
 M.draw = function()
@@ -56,7 +71,7 @@ M.draw = function()
 
   for i, option in ipairs(options) do
     local alpha = 1 -- TODO: alpha borked
-    local bullet = "  "
+    local bullet = "   "
     if state.chosenOption == i and not isMobile then
       alpha = 1
       bullet = "- "
@@ -91,11 +106,11 @@ M.onKey = function(key)
   elseif key == "down" then
     state.chosenOption = utils.plus(state.chosenOption, 1, #options)
   elseif key == "return" or key == "space" then
-    if state.chosenOption == 1 then
+    if state.chosenOption == IDX_START then
       onStartGame()
-    elseif state.chosenOption == 2 then
+    elseif state.chosenOption == IDX_HIGH then
       onHighscores()
-    elseif state.chosenOption == 5 then
+    elseif state.chosenOption == IDX_EXIT then
       onExit()
     else
       onToggleOption(state.chosenOption)
@@ -112,13 +127,14 @@ M.onPointer = function(_, y)
   for i, _ in ipairs(options) do
     local yi = y0 + dy * (i - 1)
     if y >= yi and y <= yi + dy then
-      if i == 1 then
+      state.chosenOption = i
+      if i == IDX_START then
         onStartGame()
-      elseif i == 2 then
+      elseif i == IDX_HIGH then
         onHighscores()
-      elseif i == 5 then
+      elseif i == IDX_EXIT then
         onExit()
-      else -- 3, 4
+      else
         onToggleOption(i)
       end
     end

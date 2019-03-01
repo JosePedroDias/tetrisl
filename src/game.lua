@@ -28,7 +28,9 @@ end
 local function levelUp()
   state.level = state.level + 1
   state.dtForDown = state.dtForDown - 0.2
-  love.audio.play(assets.sfx.levelUp)
+  if settings.sfx == "on" then
+    love.audio.play(assets.sfx.levelUp)
+  end
 end
 
 local function computeDropY()
@@ -48,8 +50,9 @@ local function moveDown() -- return true if it has hit
     local newLines = #state.destroyedLines
     if newLines > 0 then
       state.tNextLineAnim = state.t + state.dtForLineAnim
-      --state.tNextDown = state.tNextDown + state.dtForLineAnim
-      love.audio.play(assets.sfx.line)
+      if settings.sfx == "on" then
+        love.audio.play(assets.sfx.line)
+      end
       state.lines = state.lines + newLines
       local deltaScore = 2 ^ (newLines - 1)
       state.score = state.score + deltaScore
@@ -66,7 +69,6 @@ local function moveDown() -- return true if it has hit
 
     state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
     if state.x == -1 then
-      -- state.ended = true
       stages.toStage("arcadeinput", state.score)
     end
   else
@@ -81,7 +83,9 @@ end
 ----------------------
 
 M.unload = function()
-  assets.music.swingjeding:stop()
+  if settings.music == "on" then
+    assets.music.swingjeding:stop()
+  end
 end
 
 M.update = function(dt)
@@ -157,7 +161,6 @@ local function onRestart()
   state.level = 1
   state.lineAnimLines = {}
   state.dtForLineAnim = 1
-  -- state.tNextLineAnim = -1
   state.destroyedLines = {}
 end
 
@@ -175,7 +178,9 @@ local function onDrop()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(assets.sfx.dropHard)
+  if settings.sfx == "on" then
+    love.audio.play(assets.sfx.dropHard)
+  end
   while not moveDown() do
   end
   resetTimer()
@@ -185,7 +190,9 @@ local function onDownOnce()
   if state.paused or state.ended then
     return
   end
+  if settings.sfx == "on" then
   --love.audio.play(assets.sfx.drop)
+  end
   moveDown()
   resetTimer()
 end
@@ -194,7 +201,9 @@ local function onLeft()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(assets.sfx.move)
+  if settings.sfx == "on" then
+    love.audio.play(assets.sfx.move)
+  end
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x - 1, state.y) then
     state.x = state.x - 1
     computeDropY()
@@ -206,7 +215,9 @@ local function onRight()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(assets.sfx.move)
+  if settings.sfx == "on" then
+    love.audio.play(assets.sfx.move)
+  end
   if not T.doesBrickHitBoard(state.brickIdx, state.brickVar, state.board, state.x + 1, state.y) then
     state.x = state.x + 1
     computeDropY()
@@ -218,7 +229,9 @@ local function onCCW()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(assets.sfx.rotate)
+  if settings.sfx == "on" then
+    love.audio.play(assets.sfx.rotate)
+  end
   state.brickVar = utils.minus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()
@@ -229,7 +242,9 @@ local function onCW()
   if state.paused or state.ended then
     return
   end
-  love.audio.play(assets.sfx.rotate)
+  if settings.sfx == "on" then
+    love.audio.play(assets.sfx.rotate)
+  end
   state.brickVar = utils.plus(state.brickVar, 1, #T.BRICKS[state.brickIdx])
   state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
   computeDropY()
@@ -286,8 +301,10 @@ M.load = function()
   onRestart()
   computeDropY()
 
-  assets.music.swingjeding:play()
-  --assets.music.swingjeding.setLooping(true)
+  if settings.music == "on" then
+    assets.music.swingjeding:play()
+    assets.music.swingjeding:setLooping(true)
+  end
 
   touchcursor.setCallbacks(
     {

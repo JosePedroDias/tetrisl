@@ -13,14 +13,16 @@ local options = {
   "start game",
   "see high scores",
   "change controls",
-  "change bricks"
+  "change bricks",
+  "exit"
 }
 
 local possibleValues = {
   {""},
   {""},
   {"gameboy", "tetris99"},
-  {"gameboy", "tetris99"}
+  {"gameboy", "tetris99"},
+  {""}
 }
 
 local IDX_CTRLS = 3
@@ -36,7 +38,8 @@ M.load = function()
     1,
     1,
     utils.tableIndexOf(possibleValues[IDX_CTRLS], controls),
-    utils.tableIndexOf(possibleValues[IDX_BRICK], bricks)
+    utils.tableIndexOf(possibleValues[IDX_BRICK], bricks),
+    1
   }
 end
 
@@ -78,6 +81,10 @@ local function onToggleOption(i)
   state.chosenIndices[i] = utils.plus(state.chosenIndices[i], 1, #possibleValues[i])
 end
 
+local function onExit()
+  stages.exit()
+end
+
 M.onKey = function(key)
   if key == "up" then
     state.chosenOption = utils.minus(state.chosenOption, 1, #options)
@@ -88,11 +95,13 @@ M.onKey = function(key)
       onStartGame()
     elseif state.chosenOption == 2 then
       onHighscores()
+    elseif state.chosenOption == 5 then
+      onExit()
     else
       onToggleOption(state.chosenOption)
     end
   elseif key == "escape" then
-    stages.exit()
+    onExit()
   end
 end
 
@@ -107,7 +116,9 @@ M.onPointer = function(_, y)
         onStartGame()
       elseif i == 2 then
         onHighscores()
-      else
+      elseif i == 5 then
+        onExit()
+      else -- 3, 4
         onToggleOption(i)
       end
     end

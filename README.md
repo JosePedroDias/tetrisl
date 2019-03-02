@@ -38,25 +38,29 @@ I recommend installing luacheck and vscode ext vscode-luacheck
 ## instructions
 
     keys:
-      regular
-        keys to move
+      gameboy mode
+        arrow keys to move
         up rotates, space drops
-      tetris 99
-        keys to move (up drops)
+      tetris 99 mode
+        arrow keys to move (up drops)
         Z and X to rotate (CCW, CW)
 
+      S to hold/swap brick
       P pauses
       R restarts
       ESC to exit
 
-## TODO
+## Bugs / improvements
 
-- hold brick
-- tweak speeds, levels, scores
+- improvement: keyboard repeat fixed between OSs
+- improvement: skip name entry if you can't fit the top 10
+
+## Possible features
+
 - screensaver shader bg thingie, maybe
 - networking features
-  - log events as udp
-  - lobby to pair 2 ppl
+  - log events to UDP
+  - lobby to pair 2 players
   - vs game
 - publish
   - love file for desktop

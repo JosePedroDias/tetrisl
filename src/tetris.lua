@@ -260,7 +260,7 @@ local function prepare()
     CANVAS[i] = G.newCanvas(c, c)
     G.setCanvas(CANVAS[i])
 
-    local maxAlpha = i == 1 and 1 or GHOST_ALPHA * 2
+    local maxAlpha = i == 1 and 1 or GHOST_ALPHA * 1.5
 
     G.setColor(0.5, 0.5, 0.5, 1)
     G.rectangle("fill", 0, 0, c, c)

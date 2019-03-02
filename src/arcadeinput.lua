@@ -55,25 +55,6 @@ local alphabet = {
 
 local state = {}
 
-M.draw = function()
-  local dy = 30
-  local x = consts.W / 2
-  local y = (consts.H - dy * 2) / 2
-
-  G.setColor(1, 1, 1, 1)
-  local f = G.getFont()
-
-  local l1 = "What is your name?"
-  local w1 = f:getWidth(l1)
-  local l2 = state.written .. "(" .. alphabet[state.index] .. ")"
-  local w2 = f:getWidth(l2)
-
-  G.print(l1, x - w1 / 2, y)
-  G.print(l2, x - w2 / 2, y + dy)
-
-  touchcursor.draw()
-end
-
 local function saveAndReturn(name)
   if string.len(name) > 0 then
     scoreboard.add(name, state.score)
@@ -104,22 +85,6 @@ local function onEnter()
   saveAndReturn(state.written)
 end
 
-M.onKey = function(key)
-  if key == "down" then
-    onDown()
-  elseif key == "up" then
-    onUp()
-  elseif key == "left" then
-    onLeft()
-  elseif key == "right" then
-    onRight()
-  elseif key == "return" then
-    onEnter()
-  elseif key == "escape" then
-    saveAndReturn("")
-  end
-end
-
 M.load = function(score)
   state.written = ""
   state.index = 1
@@ -136,8 +101,51 @@ M.load = function(score)
   )
 end
 
+M.update = function(dt)
+  touchcursor.update(dt)
+end
+
+M.draw = function()
+  local dy = 30
+  local x = consts.W / 2
+  local y = (consts.H - dy * 2) / 2
+
+  G.setColor(1, 1, 1, 1)
+  local f = G.getFont()
+
+  local l1 = "What is your name?"
+  local w1 = f:getWidth(l1)
+  local l2 = state.written .. "(" .. alphabet[state.index] .. ")"
+  local w2 = f:getWidth(l2)
+
+  G.print(l1, x - w1 / 2, y)
+  G.print(l2, x - w2 / 2, y + dy)
+
+  touchcursor.draw()
+end
+
+M.onKey = function(key)
+  if key == "down" then
+    onDown()
+  elseif key == "up" then
+    onUp()
+  elseif key == "left" then
+    onLeft()
+  elseif key == "right" then
+    onRight()
+  elseif key == "return" then
+    onEnter()
+  elseif key == "escape" then
+    saveAndReturn("")
+  end
+end
+
 M.onPointer = function(x, y)
   touchcursor.onPointer(x, y)
+end
+
+M.onPointerUp = function(x, y)
+  touchcursor.onPointerUp(x, y)
 end
 
 return M

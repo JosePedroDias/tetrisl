@@ -91,6 +91,8 @@ M.unload = function()
 end
 
 M.update = function(dt)
+  touchcursor.update(dt)
+
   if state.paused or state.ended then
     return
   end
@@ -100,6 +102,7 @@ M.update = function(dt)
       T.computeLines(state.board, true)
       state.tNextLineAnim = nil
       state.destroyedLines = {}
+      computeDropY()
     end
   elseif state.t > state.tNextDown then
     moveDown()
@@ -220,6 +223,7 @@ local function onSwap()
     state.swap = state.brickIdx
     state.brickIdx = utils.unshift(state.nextBrickIndices)
   end
+  state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
 end
 
 local function onLeft()
@@ -346,6 +350,10 @@ end
 
 M.onPointer = function(x, y)
   touchcursor.onPointer(x, y)
+end
+
+M.onPointerUp = function(x, y)
+  touchcursor.onPointerUp(x, y)
 end
 
 return M

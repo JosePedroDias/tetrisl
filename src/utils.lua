@@ -75,6 +75,45 @@ M.arrayToString = function(tbl)
   return s
 end
 
+M.push = function(arr, item)
+  table.insert(arr, item)
+  return arr
+end
+
+M.pop = function(arr)
+  return table.remove(arr, #arr)
+end
+
+M.shift = function(arr, item)
+  table.insert(arr, 1, item)
+  return arr
+end
+
+M.unshift = function(arr)
+  return table.remove(arr, 1)
+end
+
+M.slice = function(arr, start, stop)
+  local res = {}
+  start = start or 1
+  stop = stop or #arr
+  for i = start, stop do
+    table.insert(res, arr[i])
+  end
+  return res
+end
+
+M.times = function(n, fn)
+  fn = fn or function(i)
+      return i
+    end
+  local arr = {}
+  for i = 1, n do
+    table.insert(arr, fn(i))
+  end
+  return arr
+end
+
 M.split = function(st, sep)
   if sep == nil then
     sep = "%s"
@@ -98,7 +137,7 @@ M.tableLength = function(tbl)
   return len
 end
 
-M.tableHas = function(tbl, item)
+M.has = function(tbl, item)
   for _, v in pairs(tbl) do
     if v == item then
       return true
@@ -107,7 +146,7 @@ M.tableHas = function(tbl, item)
   return false
 end
 
-M.tableIndexOf = function(tbl, item)
+M.indexOf = function(tbl, item)
   for i, v in ipairs(tbl) do
     if v == item then
       return i
@@ -115,7 +154,7 @@ M.tableIndexOf = function(tbl, item)
   end
 end
 
-M.tableMap = function(tbl, cb)
+M.map = function(tbl, cb)
   local res = {}
   for i, v in ipairs(tbl) do
     table.insert(res, cb(v, i))
@@ -124,18 +163,8 @@ M.tableMap = function(tbl, cb)
 end
 
 M.join = function(tbl, sep)
-  local s = ""
-  local len = M.tableLength(tbl)
-  local i = 1
-  for _, v in pairs(tbl) do
-    if i < len then
-      s = s .. v .. sep
-    else
-      s = s .. v
-    end
-    i = i + 1
-  end
-  return s
+  sep = sep or ""
+  return table.concat(tbl, sep)
 end
 
 M.explodeString = function(st)
@@ -177,6 +206,8 @@ M.deepEqual = function(t1, t2)
 
   return true
 end
+
+-----
 
 M.minus = function(v, minV, maxV, dontLoop)
   if v == minV then

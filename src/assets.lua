@@ -1,10 +1,10 @@
 local M = {fonts = {}, sfx = {}, music = {}, gfx = {}}
 
 M.load = function()
-  local notoF = love.graphics.newFont("fonts/permanent_marker.fnt")
-  love.graphics.setFont(notoF)
+  local mainF = love.graphics.newFont("fonts/permanent_marker.fnt")
+  love.graphics.setFont(mainF)
 
-  M.fonts["noto"] = notoF
+  M.fonts["main"] = mainF
 
   local dropSfx = love.audio.newSource("sounds/drop.ogg", "static")
   local dropHardSfx = love.audio.newSource("sounds/drop_hard.ogg", "static")

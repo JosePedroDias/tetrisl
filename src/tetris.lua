@@ -307,7 +307,7 @@ end
 
 local function drawBoard(board, destroyedLines)
   local function fn(b, x, y)
-    local wasDestroyed = utils.tableHas(destroyedLines, y)
+    local wasDestroyed = utils.has(destroyedLines, y)
     local v = b[id2(x, y)]
     drawCell(v, x - 1, y - 1, wasDestroyed)
   end
@@ -317,7 +317,7 @@ end
 local function drawBoardBackground()
   for y = 0, consts.h - 1 do
     for x = 0, consts.w - 1 do
-      local alpha = (x + y) % 2 == 0 and 0.075 or 0.05
+      local alpha = (x + y) % 2 == 0 and 0.1 or 0.05
       G.setColor(1, 1, 1, alpha)
       G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
     end

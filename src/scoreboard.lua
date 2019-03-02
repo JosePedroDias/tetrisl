@@ -24,7 +24,7 @@ M.load = function()
     return row
   end
 
-  return utils.tableMap(lines, parseLine)
+  return utils.map(lines, parseLine)
 end
 
 M.add = function(who, points)

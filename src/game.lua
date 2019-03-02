@@ -10,6 +10,8 @@ local M = {}
 
 local G = love.graphics
 
+local isMobile = utils.isMobile()
+
 local state = {}
 
 local BLINK_DELTA = 1 / 4
@@ -61,8 +63,8 @@ local function moveDown() -- return true if it has hit
       end
     end
 
-    state.brickIdx = state.nextBrickIdx
-    state.nextBrickIdx = getRandomBrickIdx()
+    utils.push(state.nextBrickIndices, getRandomBrickIdx())
+    state.brickIdx = utils.unshift(state.nextBrickIndices)
     state.brickVar = 1
     state.y = 0
     state.x = 3
@@ -112,7 +114,6 @@ M.draw = function()
 
   if state.tNextLineAnim == nil then
     r = (state.tNextDown - state.t) / state.dtForDown
-
     r = r * r * r
   end
 
@@ -120,23 +121,37 @@ M.draw = function()
 
   T.drawBoard(state.board, state.t % BLINK_DELTA < BLINK_DELTA / 2 and state.destroyedLines or {})
 
+  if not isMobile then
+    G.setColor(1, 1, 1, 1)
+    G.print("Hold:", 190, 40)
+    if state.swap then
+      T.drawBrick({-5.5, 0}, state.swap, 1)
+    end
+  end
+
+  G.setColor(1, 1, 1, 1)
+  G.print("Next blocks:", 550, 40)
+  for i = 1, 5 do
+    T.drawBrick({12.5, (i - 1) * 4}, state.nextBrickIndices[i], 1)
+  end
+
   if state.tNextLineAnim == nil and not state.ended then
     if state.y ~= state.dropY and settings.ghost == "on" then
       T.drawBrick({state.x, state.dropY}, state.brickIdx, state.brickVar, true)
     end
-
     T.drawBrick({state.x, state.y + (1 - r - 1)}, state.brickIdx, state.brickVar)
-
-    T.drawBrick({13, 0}, state.nextBrickIdx, 1)
   end
 
+  local mainF = assets.fonts.main
+
   G.setColor(1, 1, 1, 1)
-  G.print("level:" .. state.level .. "  score:" .. state.score .. "  lines:" .. state.lines)
+  local status = "Level: " .. state.level .. "  Score: " .. state.score .. "  Lines: " .. state.lines
+  local w = mainF:getWidth(status)
+  G.print(status, (consts.W - w) / 2, 0)
 
   if state.paused then
-    G.print("P A U S E D", consts.W / 2 - 34, consts.H / 2 - 8)
-  elseif state.ended then
-    G.print("GAME OVER", consts.W / 2 - 34, consts.H / 2 - 8)
+    local w2 = mainF:getWidth("P A U S E D")
+    G.print("P A U S E D", (consts.W - w2) / 2, consts.H / 2 - 18)
   end
 
   touchcursor.draw()
@@ -145,10 +160,10 @@ end
 -----
 
 local function onRestart()
+  state.nextBrickIndices = utils.times(10, getRandomBrickIdx)
   state.paused = false
   state.ended = false
-  state.nextBrickIdx = getRandomBrickIdx()
-  state.brickIdx = getRandomBrickIdx()
+  state.brickIdx = utils.unshift(state.nextBrickIndices)
   state.brickVar = 1
   state.board = T.emptyBoard()
   state.x = 3
@@ -162,6 +177,7 @@ local function onRestart()
   state.lineAnimLines = {}
   state.dtForLineAnim = 1
   state.destroyedLines = {}
+  state.swap = nil
 end
 
 local function onPause()
@@ -192,6 +208,18 @@ local function onDownOnce()
   end
   moveDown()
   resetTimer()
+end
+
+local function onSwap()
+  state.brickVar = 1
+  if state.swap then
+    utils.shift(state.nextBrickIndices, state.brickIdx)
+    state.brickIdx = state.swap
+    state.swap = nil
+  else
+    state.swap = state.brickIdx
+    state.brickIdx = utils.unshift(state.nextBrickIndices)
+  end
 end
 
 local function onLeft()
@@ -282,13 +310,14 @@ M.onKey = function(key)
       onDrop()
     end
   end
-
-  if key == "p" then
+  if key == "s" then
+    onSwap()
+  elseif key == "p" then
     onPause()
   elseif key == "r" then
     onRestart()
   elseif key == "escape" then
-    stages.exit()
+    stages.toStage("menu")
   end
 end
 

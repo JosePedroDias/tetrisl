@@ -51,11 +51,11 @@ M.load = function()
   state.chosenIndices = {
     1,
     1,
-    utils.tableIndexOf(possibleValues[IDX_GHOST], ghost),
-    utils.tableIndexOf(possibleValues[IDX_CTRLS], controls),
-    utils.tableIndexOf(possibleValues[IDX_BRICK], bricks),
-    utils.tableIndexOf(possibleValues[IDX_SFX], sfx),
-    utils.tableIndexOf(possibleValues[IDX_MUSIC], music),
+    utils.indexOf(possibleValues[IDX_GHOST], ghost),
+    utils.indexOf(possibleValues[IDX_CTRLS], controls),
+    utils.indexOf(possibleValues[IDX_BRICK], bricks),
+    utils.indexOf(possibleValues[IDX_SFX], sfx),
+    utils.indexOf(possibleValues[IDX_MUSIC], music),
     1
   }
 end

@@ -12,6 +12,7 @@ local isMobile = utils.isMobile()
 local options = {
   "start game",
   "see high scores",
+  "show ghost",
   "change controls",
   "change bricks",
   "sound effects",
@@ -22,6 +23,7 @@ local options = {
 local possibleValues = {
   {""},
   {""},
+  {"on", "off"},
   {"gameboy", "tetris99"},
   {"gameboy", "tetris99"},
   {"on", "off"},
@@ -32,22 +34,24 @@ local possibleValues = {
 local IDX_START = 1
 local IDX_HIGH = 2
 
-local IDX_CTRLS = 3
-local IDX_BRICK = 4
-local IDX_SFX = 5
-local IDX_MUSIC = 6
+local IDX_GHOST = 3
+local IDX_CTRLS = 4
+local IDX_BRICK = 5
+local IDX_SFX = 6
+local IDX_MUSIC = 7
 
-local IDX_EXIT = 7
+local IDX_EXIT = 8
 
 local state = {}
 
 M.load = function()
-  local controls, bricks, sfx, music = settings.get()
+  local ghost, controls, bricks, sfx, music = settings.get()
 
   state.chosenOption = 1
   state.chosenIndices = {
     1,
     1,
+    utils.tableIndexOf(possibleValues[IDX_GHOST], ghost),
     utils.tableIndexOf(possibleValues[IDX_CTRLS], controls),
     utils.tableIndexOf(possibleValues[IDX_BRICK], bricks),
     utils.tableIndexOf(possibleValues[IDX_SFX], sfx),
@@ -57,11 +61,12 @@ M.load = function()
 end
 
 M.unload = function()
+  local ghost = possibleValues[IDX_GHOST][state.chosenIndices[IDX_GHOST]]
   local controls = possibleValues[IDX_CTRLS][state.chosenIndices[IDX_CTRLS]]
   local bricks = possibleValues[IDX_BRICK][state.chosenIndices[IDX_BRICK]]
   local sfx = possibleValues[IDX_SFX][state.chosenIndices[IDX_SFX]]
   local music = possibleValues[IDX_MUSIC][state.chosenIndices[IDX_MUSIC]]
-  settings.save(controls, bricks, sfx, music)
+  settings.save(ghost, controls, bricks, sfx, music)
 end
 
 M.draw = function()

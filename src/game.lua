@@ -121,7 +121,7 @@ M.draw = function()
   T.drawBoard(state.board, state.t % BLINK_DELTA < BLINK_DELTA / 2 and state.destroyedLines or {})
 
   if state.tNextLineAnim == nil and not state.ended then
-    if state.y ~= state.dropY then
+    if state.y ~= state.dropY and settings.ghost == "on" then
       T.drawBrick({state.x, state.dropY}, state.brickIdx, state.brickVar, true)
     end
 
@@ -189,9 +189,6 @@ end
 local function onDownOnce()
   if state.paused or state.ended then
     return
-  end
-  if settings.sfx == "on" then
-  --love.audio.play(assets.sfx.drop)
   end
   moveDown()
   resetTimer()

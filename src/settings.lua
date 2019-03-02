@@ -5,17 +5,18 @@ local M = {}
 -- will be stored at: C:\Users\josep\AppData\Roaming\LOVE\tetris\settings.txt
 local SETTINGS_FILE = "settings.txt"
 
-local VERSION = "2"
+local VERSION = "3"
 
 -- 1=controls 2=bricks 3-sfx 4-music
-local valuesInMemory = {"tetris99", "tetris99", "on", "on"}
+local valuesInMemory = {"on", "tetris99", "tetris99", "on", "on"}
 
 M.get = function()
-  return valuesInMemory[1], valuesInMemory[2], valuesInMemory[3], valuesInMemory[4]
+  return valuesInMemory[1], valuesInMemory[2], valuesInMemory[3], valuesInMemory[4], valuesInMemory[5]
 end
 
-M._set = function(controls, bricks, sfx, music)
-  valuesInMemory = {controls, bricks, sfx, music}
+M._set = function(ghost, controls, bricks, sfx, music)
+  valuesInMemory = {ghost, controls, bricks, sfx, music}
+  M.ghost = ghost
   M.controls = controls
   M.bricks = bricks
   M.sfx = sfx
@@ -29,18 +30,18 @@ M.load = function()
   end
 
   local status, matches = pcall(utils.split, data, " ")
-  if not status or matches[1] ~= VERSION or #matches ~= 5 then
+  if not status or matches[1] ~= VERSION or #matches ~= (#valuesInMemory + 1) then
     return M.get()
   end
 
-  M._set(matches[2], matches[3], matches[4], matches[5])
+  M._set(matches[2], matches[3], matches[4], matches[5], matches[6])
 
-  return matches[2], matches[3], matches[4], matches[5]
+  return matches[2], matches[3], matches[4], matches[5], matches[6]
 end
 
-M.save = function(controls, bricks, sfx, music)
-  M._set(controls, bricks, sfx, music)
-  love.filesystem.write(SETTINGS_FILE, utils.join({VERSION, controls, bricks, sfx, music}, " "))
+M.save = function(ghost, controls, bricks, sfx, music)
+  M._set(ghost, controls, bricks, sfx, music)
+  love.filesystem.write(SETTINGS_FILE, utils.join({VERSION, ghost, controls, bricks, sfx, music}, " "))
 end
 
 return M

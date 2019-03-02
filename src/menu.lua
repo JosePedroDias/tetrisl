@@ -5,6 +5,8 @@ local stages = require "src.stages"
 
 local G = love.graphics
 
+local DY = 50
+
 local M = {}
 
 local isMobile = utils.isMobile()
@@ -12,35 +14,34 @@ local isMobile = utils.isMobile()
 local options = {
   "start game",
   "see high scores",
+  "quit",
   "show ghost",
-  "change controls",
-  "change bricks",
+  "controls scheme",
+  "brick rotations",
   "sound effects",
-  "music",
-  "exit"
+  "music"
 }
 
 local possibleValues = {
   {""},
   {""},
+  {""},
   {"on", "off"},
   {"gameboy", "tetris99"},
   {"gameboy", "tetris99"},
   {"on", "off"},
-  {"on", "off"},
-  {""}
+  {"on", "off"}
 }
 
 local IDX_START = 1
 local IDX_HIGH = 2
+local IDX_EXIT = 3
 
-local IDX_GHOST = 3
-local IDX_CTRLS = 4
-local IDX_BRICK = 5
-local IDX_SFX = 6
-local IDX_MUSIC = 7
-
-local IDX_EXIT = 8
+local IDX_GHOST = 4
+local IDX_CTRLS = 5
+local IDX_BRICK = 6
+local IDX_SFX = 7
+local IDX_MUSIC = 8
 
 local state = {}
 
@@ -51,12 +52,12 @@ M.load = function()
   state.chosenIndices = {
     1,
     1,
+    1,
     utils.indexOf(possibleValues[IDX_GHOST], ghost),
     utils.indexOf(possibleValues[IDX_CTRLS], controls),
     utils.indexOf(possibleValues[IDX_BRICK], bricks),
     utils.indexOf(possibleValues[IDX_SFX], sfx),
-    utils.indexOf(possibleValues[IDX_MUSIC], music),
-    1
+    utils.indexOf(possibleValues[IDX_MUSIC], music)
   }
 end
 
@@ -70,22 +71,24 @@ M.unload = function()
 end
 
 M.draw = function()
-  local dy = 30
-  local x0 = consts.W / 2 - 100
-  local y0 = (consts.H - dy * #options) / 2
+  local x0 = consts.W / 2 - 140
+  local y0 = (consts.H - DY * #options) / 2
+
+  G.setColor(1, 1, 1, 1)
 
   for i, option in ipairs(options) do
-    local alpha = 1 -- TODO: alpha borked
+    if i == 4 then
+      G.setColor(1, 1, 1, 0.75)
+    end
     local bullet = "   "
     if state.chosenOption == i and not isMobile then
-      alpha = 1
       bullet = "- "
     end
 
     local value = possibleValues[i][state.chosenIndices[i]]
-    G.setColor(1, 1, 1, alpha)
+
     local sep = value ~= "" and ": " or ""
-    G.print(bullet .. option .. sep .. value, x0, y0 + dy * (i - 1))
+    G.print(bullet .. option .. sep .. value, x0, y0 + DY * (i - 1))
   end
 end
 
@@ -126,12 +129,11 @@ M.onKey = function(key)
 end
 
 M.onPointer = function(_, y)
-  local dy = 30
-  local y0 = (consts.H - dy * #options) / 2
+  local y0 = (consts.H - DY * #options) / 2
 
   for i, _ in ipairs(options) do
-    local yi = y0 + dy * (i - 1)
-    if y >= yi and y <= yi + dy then
+    local yi = y0 + DY * (i - 1)
+    if y >= yi and y <= yi + DY then
       state.chosenOption = i
       if i == IDX_START then
         onStartGame()

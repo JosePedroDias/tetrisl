@@ -7,7 +7,18 @@ local stages = {}
 local function noop()
 end
 
-local api = {"load", "update", "draw", "onKey", "onKeyUp", "onPointer", "onPointerMove", "onPointerUp", "unload"}
+local api = {
+  "load",
+  "focus",
+  "update",
+  "draw",
+  "onKey",
+  "onKeyUp",
+  "onPointer",
+  "onPointerMove",
+  "onPointerUp",
+  "unload"
+}
 
 M.setStage = function(stageName, stageValue)
   stages[stageName] = stageValue

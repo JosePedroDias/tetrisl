@@ -6,9 +6,9 @@ local G = love.graphics
 
 local REPEAT_MS = 0.2
 
-local size = 60
-local dist = 5
-local pos = {8.75 * size, 6 * size}
+local size = 70
+local dist = 4
+local pos = {7.75 * size, 5 * size}
 
 local buttons
 local isDown
@@ -105,12 +105,20 @@ M.onPointerUp = function(x, y)
     return
   end
 
-  local i = pressingButton(x, y)
+  --[[   local i = pressingButton(x, y)
   if not i then
     return
   end
 
-  isDown[i] = false
+  isDown[i] = false ]]
+  -- exclusive mode, ie, having an up unpresses all buttons
+  isDown =
+    utils.map(
+    isDown,
+    function()
+      return false
+    end
+  )
 end
 
 return M

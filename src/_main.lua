@@ -31,6 +31,10 @@ function love.load()
   settings.load()
 end
 
+function love.focus(f)
+  stages.currentStage.focus(f)
+end
+
 function love.update(dt)
   stages.currentStage.update(dt)
 end

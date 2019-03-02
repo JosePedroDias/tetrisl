@@ -348,6 +348,10 @@ M.load = function()
   )
 end
 
+M.focus = function(isFocused)
+  state.paused = not isFocused
+end
+
 M.onPointer = function(x, y)
   touchcursor.onPointer(x, y)
 end

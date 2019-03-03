@@ -27,6 +27,12 @@ M.load = function()
   return utils.map(lines, parseLine)
 end
 
+M.makesIt = function(points)
+  local entries = M.load()
+  local lastEntryPoints = entries[#entries][1]
+  return points > lastEntryPoints
+end
+
 M.add = function(who, points)
   local scores = M.load()
 

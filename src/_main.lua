@@ -45,12 +45,12 @@ function love.draw()
   screen.endDraw()
 end
 
-function love.keypressed(key) --, scancode, is_repeat)
-  stages.currentStage.onKey(key)
+function love.keypressed(key, scancode, isRepeat)
+  stages.currentStage.onKey(key, scancode, isRepeat)
 end
 
-function love.keyreleased(key) -- , scancode)
-  stages.currentStage.onKeyUp(key)
+function love.keyreleased(key, scancode)
+  stages.currentStage.onKeyUp(key, scancode)
 end
 
 function love.mousepressed(_x, _y)
@@ -66,4 +66,8 @@ end
 function love.mousereleased(_x, _y)
   local x, y = screen.coords(_x, _y)
   stages.currentStage.onPointerUp(x, y)
+end
+
+function love.textinput(text)
+  stages.currentStage.onTextInput(text)
 end

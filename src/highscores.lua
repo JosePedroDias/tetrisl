@@ -16,7 +16,7 @@ end
 
 M.update = function(dt)
   t = t + dt
-  if t > 3 then
+  if t > 6 then
     stages.toStage("menu")
   end
 end

@@ -52,21 +52,22 @@ I recommend installing luacheck and vscode ext vscode-luacheck
 
 ## Bugs / improvements
 
-- improvement: keyboard repeat fixed between OSs
-- improvement: skip name entry if you can't fit the top 10
+- report feedback please. none currently AFAIK
 
 ## Possible features
 
-- screensaver shader bg thingie, maybe
+- screensaver shader BG thingie, maybe
 - networking features
   - log events to UDP
   - lobby to pair 2 players
   - vs game
-- publish
-  - love file for desktop
-  - android apk
-  - ios ipa
-  - web runner
+
+## Publishing...
+
+- love file for desktop
+- android apk
+- ios ipa
+- web runner
 
 ## dependencies
 

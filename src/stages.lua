@@ -17,6 +17,7 @@ local api = {
   "onPointer",
   "onPointerMove",
   "onPointerUp",
+  "onTextInput",
   "unload"
 }
 

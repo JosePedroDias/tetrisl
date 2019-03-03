@@ -53,6 +53,8 @@ local alphabet = {
   "?"
 }
 
+local t = 0
+
 local state = {}
 
 local function saveAndReturn(name)
@@ -102,6 +104,7 @@ M.load = function(score)
 end
 
 M.update = function(dt)
+  t = t + dt
   touchcursor.update(dt)
 end
 
@@ -115,10 +118,19 @@ M.draw = function()
 
   local l1 = "What is your name?"
   local w1 = f:getWidth(l1)
-  local l2 = state.written .. "(" .. alphabet[state.index] .. ")"
+  G.print(l1, x - w1 / 2, y)
+
+  local lastChar = alphabet[state.index]
+  local isHidden = t % 0.6 < 0.3
+
+  local l2
+  if utils.isMobile() then
+    l2 = state.written .. (isHidden and " " or lastChar)
+  else
+    l2 = state.written .. (isHidden and " " or "|")
+  end
   local w2 = f:getWidth(l2)
 
-  G.print(l1, x - w1 / 2, y)
   G.print(l2, x - w2 / 2, y + dy)
 
   touchcursor.draw()
@@ -131,6 +143,8 @@ M.onKey = function(key)
     onUp()
   elseif key == "left" then
     onLeft()
+  elseif key == "backspace" then
+    onLeft()
   elseif key == "right" then
     onRight()
   elseif key == "return" then
@@ -138,6 +152,10 @@ M.onKey = function(key)
   elseif key == "escape" then
     saveAndReturn("")
   end
+end
+
+M.onTextInput = function(text)
+  state.written = state.written .. text
 end
 
 M.onPointer = function(x, y)

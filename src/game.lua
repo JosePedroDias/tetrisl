@@ -4,6 +4,7 @@ local settings = require "src.settings"
 local stages = require "src.stages"
 local assets = require "src.assets"
 local T = require "src.tetris"
+local scoreboard = require "src.scoreboard"
 local touchcursor = require "src.touchcursor"
 
 local M = {}
@@ -71,7 +72,12 @@ local function moveDown() -- return true if it has hit
 
     state.x = T.electNearestPosition(state.brickIdx, state.brickVar, state.board, state.x, state.y)
     if state.x == -1 then
-      stages.toStage("arcadeinput", state.score)
+      if scoreboard.makesIt(state.score) then
+        stages.toStage("arcadeinput", state.score)
+      else
+        state.ended = true
+        state.t = 0
+      end
     end
   else
     state.y = state.y + 1
@@ -93,7 +99,13 @@ end
 M.update = function(dt)
   touchcursor.update(dt)
 
-  if state.paused or state.ended then
+  if state.paused then
+    return
+  elseif state.ended then
+    state.t = state.t + dt
+    if state.t > 2 then
+      stages.toStage("menu")
+    end
     return
   end
 
@@ -152,9 +164,10 @@ M.draw = function()
   local w = mainF:getWidth(status)
   G.print(status, (consts.W - w) / 2, 0)
 
-  if state.paused then
-    local w2 = mainF:getWidth("P A U S E D")
-    G.print("P A U S E D", (consts.W - w2) / 2, consts.H / 2 - 18)
+  if state.paused or state.ended then
+    local txt = state.paused and "P A U S E D" or "G A M E   O V E R"
+    local w2 = mainF:getWidth(txt)
+    G.print(txt, (consts.W - w2) / 2, consts.H / 2 - 18)
   end
 
   touchcursor.draw()
@@ -214,6 +227,9 @@ local function onDownOnce()
 end
 
 local function onSwap()
+  if state.paused or state.ended then
+    return
+  end
   state.brickVar = 1
   if state.swap then
     utils.shift(state.nextBrickIndices, state.brickIdx)

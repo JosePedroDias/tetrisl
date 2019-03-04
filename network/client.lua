@@ -1,63 +1,51 @@
 local socket = require "socket"
 
+-- local lovebird = require "lovebird"
+
+local udp
 local address, port = "127.0.0.1", 12345
-local entity
-local updaterate = 0.1
+local t = 0
+local DELTA_REFRESH = 0.5
+local nextRefresh = t + DELTA_REFRESH
+local dx = 10
+
+math.randomseed(os.time())
+
 local world = {}
-local t
+local myEntityId = tostring(math.random(99999))
+world[myEntityId] = {x = 320, y = 240}
+
+local function requestUpdate()
+  udp:send(myEntityId .. " update $")
+end
 
 function love.load()
+  love.keyboard.setKeyRepeat(true)
+
   udp = socket.udp()
   udp:settimeout(0)
   udp:setpeername(address, port)
-  math.randomseed(os.time())
-  entity = tostring(math.random(99999))
 
-  local dg = string.format("%s %s %d %d", entity, "at", 320, 240)
-  udp:send(dg)
-  print(dg)
-
-  t = 0
+  requestUpdate()
 end
 
-function love.update(deltatime)
-  t = t + deltatime
+function love.update(dt)
+  -- lovebird.update()
 
-  if t > updaterate then
-    local x, y = 0, 0
-    if love.keyboard.isDown("up") then
-      y = y - (20 * t)
-    end
-    if love.keyboard.isDown("down") then
-      y = y + (20 * t)
-    end
-    if love.keyboard.isDown("left") then
-      x = x - (20 * t)
-    end
-    if love.keyboard.isDown("right") then
-      x = x + (20 * t)
-    end
+  t = t + dt
 
-    local dg = string.format("%s %s %f %f", entity, "move", x, y)
-    udp:send(dg)
-    print(dg)
-
-    local dg = string.format("%s %s $", entity, "update")
-    udp:send(dg)
-    print(dg)
-
-    t = t - updaterate
+  if t > nextRefresh then
+    requestUpdate()
+    nextRefresh = t + DELTA_REFRESH
   end
 
   repeat
-    data, msg = udp:receive()
+    local data, msg = udp:receive()
 
     if data then
-      ent, cmd, parms = data:match("^(%S*) (%S*) (.*)")
+      local ent, cmd, parms = data:match("^(%S*) (%S*) (.*)")
       if cmd == "at" then
         local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
-        assert(x and y)
-
         x, y = tonumber(x), tonumber(y)
         world[ent] = {x = x, y = y}
       else
@@ -70,7 +58,27 @@ function love.update(deltatime)
 end
 
 function love.draw()
+  love.graphics.setColor(1, 1, 1, 1)
   for k, v in pairs(world) do
     love.graphics.print(k, v.x, v.y)
   end
+end
+
+function love.keypressed(key) --, scancode, isRepeat)
+  local ent = world[myEntityId]
+  if key == "up" then
+    ent.y = ent.y - dx
+  elseif key == "down" then
+    ent.y = ent.y + dx
+  elseif key == "left" then
+    ent.x = ent.x - dx
+  elseif key == "right" then
+    ent.x = ent.x + dx
+  elseif key == "q" then
+    udp:send(myEntityId .. " quit $")
+  elseif key == "escape" then
+    love.event.quit()
+  end
+
+  udp:send(myEntityId .. " at " .. ent.x .. " " .. ent.y)
 end

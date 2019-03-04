@@ -9,6 +9,8 @@ local game = require "src.game"
 local arcadeinput = require "src.arcadeinput"
 local highscores = require "src.highscores"
 
+--local lovebird = require("lovebird")
+
 function love.load()
   settings.load()
 
@@ -17,6 +19,7 @@ function love.load()
   -- image resolution fix
   local sW, sH = screen.getCurrentResolution()
   screen.setSize(sW, sH, consts.W, consts.H, true)
+  --screen.setSize(800, 600, consts.W, consts.H, false)
 
   -- load resources
   assets.load()
@@ -36,6 +39,7 @@ function love.focus(f)
 end
 
 function love.update(dt)
+  --lovebird.update()
   stages.currentStage.update(dt)
 end
 

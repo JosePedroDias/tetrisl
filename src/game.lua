@@ -14,6 +14,7 @@ local G = love.graphics
 local isMobile = utils.isMobile()
 
 local state = {}
+-- _G.state = state -- to expose to lovebird
 
 local BLINK_DELTA = 1 / 4
 

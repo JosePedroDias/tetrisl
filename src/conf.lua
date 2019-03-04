@@ -9,7 +9,12 @@ love.conf = function(t)
   t.externalstorage = true
   t.modules.joystick = false
   t.modules.physics = false
+
   t.window.width = 0
   t.window.height = 0
+
+  -- t.window.width = 640
+  -- t.window.height = 480
+
   t.window.title = "tetris"
 end

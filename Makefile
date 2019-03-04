@@ -16,6 +16,7 @@ endif
 
 rootd = `pwd`
 srcd = "$(rootd)/src"
+#srcd = c:\users\josep\Work\tetrisl\src
 gamename = tetris.love
 
 run-src:

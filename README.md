@@ -1,8 +1,9 @@
 # tetris game implemented in love2d
 
-A chance to better learn lua 5.1 and love2d
+A chance to better learn lua 5.1 and love2d.  
+Should run in windows/mac/linux and android. (virtual keys are displayed on top of the game).
 
-## dev deps
+## dev deps (relevant for server-side dev and luacheck only)
 
 ### mac
 
@@ -62,17 +63,11 @@ I recommend installing luacheck and vscode ext vscode-luacheck
   - lobby to pair 2 players
   - vs game
 
-## Publishing...
+## Publishing TODOs maybe...
 
 - love file for desktop
 - android apk
 - ios ipa
-- web runner
-
-## dependencies
-
-- [luasocket](https://love2d.org/wiki/Tutorial:Networking_with_UDP)
-- [love2d-bitmap-font-renderer](https://github.com/JosePedroDias/love2d-bitmap-font-renderer)
 
 ## useful tools
 
@@ -80,22 +75,15 @@ I recommend installing luacheck and vscode ext vscode-luacheck
 - [bitmap font generator](http://www.angelcode.com/products/bmfont/)
 - [xmedia-recode](https://www.xmedia-recode.de)
 
-## credits
+## asset credits
 
 - <http://freemusicarchive.org/music/RoccoW/_1035/RoccoW_-__-_04_SwingJeDing>
 
 ## reference
 
 - [lua manual 5.1](https://www.lua.org/manual/5.1/)
-- [lua iterators](https://www.lua.org/manual/2.4/node31.html)
 - [lua demo](https://www.lua.org/cgi-bin/demo)
 - [tests with testy](https://github.com/siffiejoe/lua-testy)
-- [love2d wiki](https://love2d.org/wiki/Main_Page)
 - [love2d api](http://love2d-community.github.io/love-api/)
-- [love examples](https://github.com/love2d-community/LOVE-Example-Browser/tree/master/examples)
-
----
-
 - [tetris](https://en.wikipedia.org/wiki/Tetris)
-- [reference specs](https://www.colinfahey.com/tetris/)
-- [bricks](https://www.colinfahey.com/tetris/tetris_diagram_pieces_orientations_new.jpg)
+- [some tetris specs](https://www.colinfahey.com/tetris/)

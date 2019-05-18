@@ -7,6 +7,11 @@ ifeq ($(os),Darwin)
 	luacheck = luacheck
 	love = /Applications/love.app/Contents/MacOS/love
 	open = open
+else ifeq ($(os),Linux)
+	lua = lua5.1
+	luacheck = luacheck
+	love = love
+	open = xdg-open
 else
 	lua = "c:\\ProgramData\\chocolatey\\lib\\lua51\\tools\\lua5.1.exe"
 	luacheck = "C:\\ProgramData\\chocolatey\\lib\\luarocks\\luarocks-2.4.4-win32\\systree\\bin\\luacheck.bat"

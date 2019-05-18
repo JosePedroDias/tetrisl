@@ -32,6 +32,17 @@ in a visual c++ 2017 x86 native build tools command prompt with admin do:
 
     > luarocks install luasocket
 
+### linux (ubuntu)
+
+installed latest love2d with <https://launchpad.net/~bartbes/+archive/ubuntu/love-stable>
+    > sudo apt install love
+
+then...
+    > sudo apt install lua5.1
+    > sudo apt install luarocks
+    > luarocks install luasocket
+    > luarocks install luacheck
+
 ### both
 
 I recommend installing luacheck and vscode ext vscode-luacheck

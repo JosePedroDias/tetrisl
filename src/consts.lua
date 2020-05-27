@@ -1,3 +1,4 @@
+-- [[ set of constants for the game ]] --
 local M = {}
 
 M.W = 800

@@ -9,16 +9,9 @@ Should run in windows/mac/linux and android. (virtual keys are displayed on top 
 
     > brew install lua@5.1
     > lua5.1
-
     > brew install luarocks
-    > luarocks --lua-dir=/usr/local/opt/lua@5.1 install luasocket
-
-    > luarocks --lua-dir=/usr/local/opt/lua@5.1 show luasocket
-
-    # luarocks --lua-dir=/usr/local/opt/lua@5.1 path --bin
+    > luarocks --lua-dir=/usr/local/opt/lua@5.1 install luacheck
     > eval $(luarocks --lua-dir=/usr/local/opt/lua@5.1 path --bin)
-
-eval that to make `lua5.1` know about the libraries
 
 ### windows
 
@@ -30,17 +23,18 @@ in an admin powershell do:
 
 in a visual c++ 2017 x86 native build tools command prompt with admin do:
 
-    > luarocks install luasocket
+    > luarocks install luacheck
 
 ### linux (ubuntu)
 
 installed latest love2d with <https://launchpad.net/~bartbes/+archive/ubuntu/love-stable>
+
     > sudo apt install love
 
 then...
+
     > sudo apt install lua5.1
     > sudo apt install luarocks
-    > luarocks install luasocket
     > luarocks install luacheck
 
 ### both
@@ -65,20 +59,6 @@ I recommend installing luacheck and vscode ext vscode-luacheck
 ## Bugs / improvements
 
 - report feedback please. none currently AFAIK
-
-## Possible features
-
-- screensaver shader BG thingie, maybe
-- networking features
-  - log events to UDP
-  - lobby to pair 2 players
-  - vs game
-
-## Publishing TODOs maybe...
-
-- love file for desktop
-- android apk
-- ios ipa
 
 ## useful tools
 

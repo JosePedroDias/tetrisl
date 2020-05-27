@@ -1,3 +1,4 @@
+-- [[ highscore stage ]] --
 local consts = require "src.consts"
 local scoreboard = require "src.scoreboard"
 local stages = require "src.stages"
@@ -16,9 +17,7 @@ end
 
 M.update = function(dt)
   t = t + dt
-  if t > 6 then
-    stages.toStage("menu")
-  end
+  if t > 6 then stages.toStage("menu") end
 end
 
 M.draw = function()

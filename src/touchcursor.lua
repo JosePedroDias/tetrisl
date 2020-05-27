@@ -1,3 +1,4 @@
+--[[ this is an optional overlay to be used on mobile devices ]] --
 local utils = require "utils"
 
 local M = {}
@@ -19,9 +20,7 @@ local isMobile = utils.isMobile()
 
 local function fireKey(i)
   local cb = callbacks[callbackNames[i]]
-  if cb ~= nil then
-    cb()
-  end
+  if cb ~= nil then cb() end
 end
 
 local function pressingButton(x, y)
@@ -46,13 +45,9 @@ local function computeGeometry()
   table.insert(buttons, {p1 - sz * 5 - sz, p2 + sz2})
   table.insert(buttons, {p1 - sz * 5, p2 + sz2})
 
-  isDown =
-    utils.times(
-    #buttons,
-    function()
-      return false
-    end
-  )
+  isDown = utils.times(#buttons, function()
+    return false
+  end)
 end
 
 computeGeometry()
@@ -75,9 +70,7 @@ M.update = function(dt)
 end
 
 M.draw = function()
-  if not isMobile then
-    return
-  end
+  if not isMobile then return end
 
   G.setColor(1, 1, 1, 0.75)
   for i, p in ipairs(buttons) do
@@ -86,14 +79,10 @@ M.draw = function()
 end
 
 M.onPointer = function(x, y)
-  if not isMobile then
-    return
-  end
+  if not isMobile then return end
 
   local i = pressingButton(x, y)
-  if not i then
-    return
-  end
+  if not i then return end
 
   isDown[i] = 0
 
@@ -101,9 +90,7 @@ M.onPointer = function(x, y)
 end
 
 M.onPointerUp = function(x, y)
-  if not isMobile then
-    return
-  end
+  if not isMobile then return end
 
   --[[   local i = pressingButton(x, y)
   if not i then
@@ -112,13 +99,9 @@ M.onPointerUp = function(x, y)
 
   isDown[i] = false ]]
   -- exclusive mode, ie, having an up unpresses all buttons
-  isDown =
-    utils.map(
-    isDown,
-    function()
-      return false
-    end
-  )
+  isDown = utils.map(isDown, function()
+    return false
+  end)
 end
 
 return M

@@ -1,3 +1,4 @@
+--[[ Swiss army knife of sorts ]] --
 local M = {}
 
 M.toFixed = function(n, digits)
@@ -19,15 +20,19 @@ M.tableToString = function(tt, indent, done)
         table.insert(sb, "}\n")
       elseif "number" == type(key) then
         if (type(value) == "string") then
-          table.insert(sb, string.format('%s = "%s"\n', tostring(key), tostring(value)))
+          table.insert(sb, string.format("%s = \"%s\"\n", tostring(key),
+                                         tostring(value)))
         else
-          table.insert(sb, string.format("%s = %s\n", tostring(key), tostring(value)))
+          table.insert(sb, string.format("%s = %s\n", tostring(key),
+                                         tostring(value)))
         end
       else
         if (type(value) == "string") then
-          table.insert(sb, string.format('"%s" = "%s"\n', tostring(key), tostring(value)))
+          table.insert(sb, string.format("\"%s\" = \"%s\"\n", tostring(key),
+                                         tostring(value)))
         else
-          table.insert(sb, string.format('"%s" = %s\n', tostring(key), tostring(value)))
+          table.insert(sb, string.format("\"%s\" = %s\n", tostring(key),
+                                         tostring(value)))
         end
       end
     end
@@ -43,7 +48,7 @@ M.toString = function(tbl)
   elseif "table" == type(tbl) then
     return M.tableToString(tbl)
   elseif "string" == type(tbl) then
-    return '"' .. tbl .. '"'
+    return "\"" .. tbl .. "\""
   else
     return tostring(tbl)
   end
@@ -51,9 +56,7 @@ end
 
 M.keyValueToString = function(tbl)
   local s = ""
-  for k, v in pairs(tbl) do
-    s = s + k .. " -> " .. v .. "\n"
-  end
+  for k, v in pairs(tbl) do s = s + k .. " -> " .. v .. "\n" end
   return s
 end
 
@@ -62,9 +65,7 @@ M.arrayToString = function(tbl)
   local len = M.tableLength(tbl)
   local i = 1
   for _, v in pairs(tbl) do
-    if type(v) == "string" then
-      v = '"' .. v .. '"'
-    end
+    if type(v) == "string" then v = "\"" .. v .. "\"" end
     if i < len then
       s = s .. v .. ", "
     else
@@ -97,27 +98,21 @@ M.slice = function(arr, start, stop)
   local res = {}
   start = start or 1
   stop = stop or #arr
-  for i = start, stop do
-    table.insert(res, arr[i])
-  end
+  for i = start, stop do table.insert(res, arr[i]) end
   return res
 end
 
 M.times = function(n, fn)
   fn = fn or function(i)
-      return i
-    end
-  local arr = {}
-  for i = 1, n do
-    table.insert(arr, fn(i))
+    return i
   end
+  local arr = {}
+  for i = 1, n do table.insert(arr, fn(i)) end
   return arr
 end
 
 M.split = function(st, sep)
-  if sep == nil then
-    sep = "%s"
-  end
+  if sep == nil then sep = "%s" end
   local matches = {}
   for subSt in string.gmatch(st, "([^" .. sep .. "]+)") do
     table.insert(matches, subSt)
@@ -131,34 +126,22 @@ end
 
 M.tableLength = function(tbl)
   local len = 0
-  for _, _ in pairs(tbl) do
-    len = len + 1
-  end
+  for _, _ in pairs(tbl) do len = len + 1 end
   return len
 end
 
 M.has = function(tbl, item)
-  for _, v in pairs(tbl) do
-    if v == item then
-      return true
-    end
-  end
+  for _, v in pairs(tbl) do if v == item then return true end end
   return false
 end
 
 M.indexOf = function(tbl, item)
-  for i, v in ipairs(tbl) do
-    if v == item then
-      return i
-    end
-  end
+  for i, v in ipairs(tbl) do if v == item then return i end end
 end
 
 M.map = function(tbl, cb)
   local res = {}
-  for i, v in ipairs(tbl) do
-    table.insert(res, cb(v, i))
-  end
+  for i, v in ipairs(tbl) do table.insert(res, cb(v, i)) end
   return res
 end
 
@@ -170,9 +153,7 @@ end
 M.explodeString = function(st)
   local len = string.len(st)
   local arr = {}
-  for i = 1, len do
-    table.insert(arr, string.sub(st, i, i))
-  end
+  for i = 1, len do table.insert(arr, string.sub(st, i, i)) end
   return arr
 end
 
@@ -183,17 +164,13 @@ M.deepEqual = function(t1, t2)
     return false
   end
   if t ~= "table" then
-    if t1 ~= t2 then
-      print("values differ: " .. t1 .. " ~= " .. t2)
-    end
+    if t1 ~= t2 then print("values differ: " .. t1 .. " ~= " .. t2) end
     return t1 == t2
   end
 
   for k1, v1 in pairs(t1) do
     local v2 = t2[k1]
-    if not M.deepEqual(v1, v2) then
-      return false
-    end
+    if not M.deepEqual(v1, v2) then return false end
   end
 
   for k2, v2 in pairs(t2) do

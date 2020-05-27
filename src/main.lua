@@ -1,3 +1,3 @@
+--[[ this is loaded by default by love2d ]] --
 require "src._main"
 
--- require "network.client"

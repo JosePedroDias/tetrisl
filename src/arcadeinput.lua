@@ -1,3 +1,4 @@
+-- [[ arcade input screen ]] --
 local consts = require "src.consts"
 local utils = require "src.utils"
 local scoreboard = require "src.scoreboard"
@@ -10,47 +11,9 @@ local G = love.graphics
 local M = {}
 
 local alphabet = {
-  " ",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "-",
-  ".",
-  "!",
-  "?"
+  " ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+  "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2",
+  "3", "4", "5", "6", "7", "8", "9", "-", ".", "!", "?"
 }
 
 local t = 0
@@ -58,9 +21,7 @@ local t = 0
 local state = {}
 
 local function saveAndReturn(name)
-  if string.len(name) > 0 then
-    scoreboard.add(name, state.score)
-  end
+  if string.len(name) > 0 then scoreboard.add(name, state.score) end
   stages.toStage("highscores")
 end
 
@@ -92,15 +53,13 @@ M.load = function(score)
   state.index = 1
   state.score = score
 
-  touchcursor.setCallbacks(
-    {
-      up = onUp,
-      down = onDown,
-      left = onLeft,
-      right = onRight,
-      a = onEnter
-    }
-  )
+  touchcursor.setCallbacks({
+    up = onUp,
+    down = onDown,
+    left = onLeft,
+    right = onRight,
+    a = onEnter
+  })
 end
 
 M.update = function(dt)

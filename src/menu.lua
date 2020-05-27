@@ -1,3 +1,4 @@
+-- [[ menu screen ]] --
 local consts = require "src.consts"
 local utils = require "src.utils"
 local settings = require "src.settings"
@@ -12,25 +13,13 @@ local M = {}
 local isMobile = utils.isMobile()
 
 local options = {
-  "start game",
-  "see high scores",
-  "quit",
-  "show ghost",
-  "controls scheme",
-  "brick rotations",
-  "sound effects",
-  "music"
+  "start game", "see high scores", "quit", "show ghost", "controls scheme",
+  "brick rotations", "sound effects", "music"
 }
 
 local possibleValues = {
-  {""},
-  {""},
-  {""},
-  {"on", "off"},
-  {"gameboy", "tetris99"},
-  {"gameboy", "tetris99"},
-  {"on", "off"},
-  {"on", "off"}
+  {""}, {""}, {""}, {"on", "off"}, {"gameboy", "tetris99"},
+  {"gameboy", "tetris99"}, {"on", "off"}, {"on", "off"}
 }
 
 local IDX_START = 1
@@ -50,10 +39,7 @@ M.load = function()
 
   state.chosenOption = 1
   state.chosenIndices = {
-    1,
-    1,
-    1,
-    utils.indexOf(possibleValues[IDX_GHOST], ghost),
+    1, 1, 1, utils.indexOf(possibleValues[IDX_GHOST], ghost),
     utils.indexOf(possibleValues[IDX_CTRLS], controls),
     utils.indexOf(possibleValues[IDX_BRICK], bricks),
     utils.indexOf(possibleValues[IDX_SFX], sfx),
@@ -77,13 +63,9 @@ M.draw = function()
   G.setColor(1, 1, 1, 1)
 
   for i, option in ipairs(options) do
-    if i == 4 then
-      G.setColor(1, 1, 1, 0.75)
-    end
+    if i == 4 then G.setColor(1, 1, 1, 0.75) end
     local bullet = "   "
-    if state.chosenOption == i and not isMobile then
-      bullet = "- "
-    end
+    if state.chosenOption == i and not isMobile then bullet = "- " end
 
     local value = possibleValues[i][state.chosenIndices[i]]
 
@@ -101,7 +83,8 @@ local function onHighscores()
 end
 
 local function onToggleOption(i)
-  state.chosenIndices[i] = utils.plus(state.chosenIndices[i], 1, #possibleValues[i])
+  state.chosenIndices[i] = utils.plus(state.chosenIndices[i], 1,
+                                      #possibleValues[i])
 end
 
 local function onExit()

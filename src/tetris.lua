@@ -1,4 +1,4 @@
-local consts = require "src.consts"
+--[[ holds the game logic ]] local consts = require "src.consts"
 local utils = require "src.utils"
 
 local M = {}
@@ -50,17 +50,11 @@ end
   return {x, y}
 end ]]
 local function iterateBoard(board, fn)
-  for y = 1, consts.h do
-    for x = 1, consts.w do
-      fn(board, x, y)
-    end
-  end
+  for y = 1, consts.h do for x = 1, consts.w do fn(board, x, y) end end
 end
 
 local function iterateBoardLine(board, y, fn)
-  for x = 1, consts.w do
-    fn(board, x, y)
-  end
+  for x = 1, consts.w do fn(board, x, y) end
 end
 
 local function emptyBoard()
@@ -120,17 +114,11 @@ local function doesBrickHitBoard(brickIdx, brickVar, board, x, y)
   local items = BRICKS[brickIdx][brickVar]
   for _, v in ipairs(items) do
     local X = v[1] + x + 1
-    if X < 1 or X > consts.w then
-      return true
-    end
+    if X < 1 or X > consts.w then return true end
     local Y = v[2] + y + 1
     if Y >= 1 then
-      if Y > consts.h then
-        return true
-      end
-      if board[id2(X, Y)] ~= 0 then
-        return true
-      end
+      if Y > consts.h then return true end
+      if board[id2(X, Y)] ~= 0 then return true end
     end
   end
   return false
@@ -147,9 +135,7 @@ end
 
 local function electNearestPosition(brickIdx, brickVar, board, x, y)
   local delta = 0
-  if not doesBrickHitBoard(brickIdx, brickVar, board, x, y) then
-    return x
-  end
+  if not doesBrickHitBoard(brickIdx, brickVar, board, x, y) then return x end
 
   while true do
     delta = delta + 1
@@ -162,17 +148,13 @@ local function electNearestPosition(brickIdx, brickVar, board, x, y)
       return x + delta
     end
 
-    if delta > 5 then
-      return -1
-    end
+    if delta > 5 then return -1 end
   end
 end
 
 local function moveLinesDown(board, sinceY)
   for x = 1, consts.w do
-    for y = sinceY, 2, -1 do
-      board[id2(x, y)] = board[id2(x, y - 1)]
-    end
+    for y = sinceY, 2, -1 do board[id2(x, y)] = board[id2(x, y - 1)] end
     board[id2(x, 1)] = 0
   end
 end
@@ -182,9 +164,7 @@ local function isLineFilled(board, y)
 
   local function incIfPositive(board2, x, y2)
     local v = board2[id2(x, y2)]
-    if v > 0 then
-      counter = counter + 1
-    end
+    if v > 0 then counter = counter + 1 end
   end
 
   iterateBoardLine(board, y, incIfPositive)
@@ -250,9 +230,7 @@ local function drawBevel(c, gap, maxAlpha)
 end
 
 local function prepare()
-  if #CANVAS == 2 then
-    return
-  end
+  if #CANVAS == 2 then return end
 
   local c = consts.cell
 
@@ -274,9 +252,7 @@ local function prepare()
 end
 
 local function drawCell(colorIdx, x, y, isGhost)
-  if (colorIdx == 0) then
-    return
-  end
+  if (colorIdx == 0) then return end
   local clr = COLORS[colorIdx]
   local alpha = isGhost and GHOST_ALPHA or 1
   G.setColor(clr[1], clr[2], clr[3], alpha)
@@ -319,7 +295,8 @@ local function drawBoardBackground()
     for x = 0, consts.w - 1 do
       local alpha = (x + y) % 2 == 0 and 0.1 or 0.05
       G.setColor(1, 1, 1, alpha)
-      G.rectangle("fill", consts.x0 + x * consts.cell, consts.y0 + y * consts.cell, consts.cell, consts.cell)
+      G.rectangle("fill", consts.x0 + x * consts.cell,
+                  consts.y0 + y * consts.cell, consts.cell, consts.cell)
     end
   end
 end

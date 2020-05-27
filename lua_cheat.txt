@@ -21,7 +21,6 @@ end
 function(a, ..rest)
 end
 
-
 == 
 ~= 
 and
@@ -44,4 +43,12 @@ while i do
 end
 
 
+success, returnValue = pcall(f, arg1, arg2...)
+
 nextvars() -- similar but for global variables
+
+
+local everywhere...
+
+
+last return on a module is get back if you require()

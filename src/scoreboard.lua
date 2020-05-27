@@ -1,3 +1,4 @@
+-- [[ maintains a scoreboard as file ]] --
 local utils = require "src.utils"
 
 local M = {}
@@ -38,16 +39,11 @@ M.add = function(who, points)
 
   table.insert(scores, {points, who})
 
-  table.sort(
-    scores,
-    function(a, b)
-      return a[1] > b[1]
-    end
-  )
+  table.sort(scores, function(a, b)
+    return a[1] > b[1]
+  end)
 
-  if #scores > 10 then
-    scores[11] = nil
-  end
+  if #scores > 10 then scores[11] = nil end
 
   -- print(utils.tableToString(scores))
 

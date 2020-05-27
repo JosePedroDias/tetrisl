@@ -1,3 +1,4 @@
+-- [[ basic asset loading ]] --
 local M = {fonts = {}, sfx = {}, music = {}, gfx = {}}
 
 M.load = function()
@@ -20,7 +21,8 @@ M.load = function()
   M.sfx["move"] = moveSfx
   M.sfx["rotate"] = rotateSfx
 
-  local swingjedingMusic = love.audio.newSource("sounds/swingjeding.ogg", "stream")
+  local swingjedingMusic = love.audio.newSource("sounds/swingjeding.ogg",
+                                                "stream")
 
   M.music["swingjeding"] = swingjedingMusic
 end
